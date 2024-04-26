@@ -172,6 +172,38 @@ def removeRuleID():
     database.close()
     print("INFO: Rule has been removed successfuly")    
     
+def addNewServer():
+    database = mysql.connector.connect(
+        host="localhost",
+        user="bcp_grafana",
+        password="bcp_Grafana@123",
+        database="bcp_grafana")
+    
+    dbcursor = database.cursor()
+    print("INFO: Provide below Information for the Rule.")
+    projectName = input("Project Name:\t")
+    srcIP = input("Local Server IP:\t")
+    srcUsername = input("Local Server Username:\t")
+    dstIP = input("BCP Server IP:\t")
+    dstUsername = input("BCP Server Username:\t")
+
+    sql_query = f"""INSERT INTO bcpServerDetails (projectName, srcIP, srcUsername, dstIP, dstUsername) VALUES (%s, %s, %s, %s, %s)"""
+    values = (projectName, srcIP, srcUsername, dstIP, dstUsername)
+
+    dbcursor.execute(sql_query, values)
+    database.commit()
+
+    sql_query = f""" 
+        select * from bcpServerDetails where projectName = "{projectName}" AND srcIP = "{srcIP}" AND srcUsername = "{srcUsername}" AND dstIP = "{dstIP}" AND dstUsername = "{dstUsername}"
+    """
+    dbcursor.execute(sql_query)
+    output = dbcursor.fetchall()
+
+    data_as_list = [list(item) for item in output]
+    headers = ["Project Name", "Local Server IP", "Local Server Username", "DR Server IP", "DR Server Username"]
+    print(tabulate(data_as_list, headers=headers, tablefmt="grid"))
+    print("INFO: New Server added successfully.")
+
 
 main(arguments)
 
