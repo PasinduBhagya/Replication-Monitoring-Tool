@@ -17,24 +17,25 @@ def addToDatabase(csvFileName):
         os.remove(f"/var/lib/mysql-files/{csvFileName}")
     try:
         shutil.copy("DATA/" + FOLDER_NAME + f"/{csvFileName}", "/var/lib/mysql-files/")
+    
+        dbcursor_1 = database.cursor()
+
+        sql_query = f""" 
+            LOAD DATA INFILE '/var/lib/mysql-files/{csvFileName}'
+            INTO TABLE statusProgress
+            FIELDS TERMINATED BY ','
+            ENCLOSED BY '"'
+            LINES TERMINATED BY '\n'
+        """
+
+        dbcursor_1.execute(sql_query)
+        database.commit()
+
+        dbcursor_1.close()
+        database.close()
+        print("INFO: Importing to database is completed.")
     except:
         print("Error: An error occured file copying the file.")
-    dbcursor_1 = database.cursor()
-
-    sql_query = f""" 
-        LOAD DATA INFILE '/var/lib/mysql-files/{csvFileName}'
-        INTO TABLE statusProgress
-        FIELDS TERMINATED BY ','
-        ENCLOSED BY '"'
-        LINES TERMINATED BY '\n'
-    """
-
-    dbcursor_1.execute(sql_query)
-    database.commit()
-
-    dbcursor_1.close()
-    database.close()
-    print("INFO: Importing to database is completed.")
 
 def getItemsFromDatabase(PROJECT,YESTERDAY_DATE):
     database = mysql.connector.connect(
