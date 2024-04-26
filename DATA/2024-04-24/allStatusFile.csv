@@ -1,0 +1,20 @@
+date,itemName,status,itemType
+2024-04-24,WebApps,Success,CLIPPER
+2024-04-24,Scheduler Resources,Failed,CLIPPER
+2024-04-24,Libs,Failed,CLIPPER
+2024-04-24,CLIPPER,Failed,Summary
+2024-04-24,WebApps,Success,TB
+2024-04-24,Scheduler Resources,Success,TB
+2024-04-24,Libs,Success,TB
+2024-04-24,TB,Success,Summary
+2024-04-24,WebApps,Success,YAS
+2024-04-24,CON Webapps,Success,YAS
+2024-04-24,XNET Webapps,Success,YAS
+2024-04-24,B2C Webapps,Success,YAS
+2024-04-24,B2B Webapps,Success,YAS
+2024-04-24,Scheduler Resources,Success,YAS
+2024-04-24,Libs,Failed,YAS
+2024-04-24,YAS,Failed,Summary
+2024-04-24,Libs,No Data,KDM
+2024-04-24,WebApps,No Data,KDM
+2024-04-24,KDM,No Data,Summary
