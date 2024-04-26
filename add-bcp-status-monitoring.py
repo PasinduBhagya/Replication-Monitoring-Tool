@@ -52,11 +52,11 @@ def main(arguments):
         print("INFO: Listing all Servers")
         listServers()
     elif arguments[1:2][0] == "--add-rule":
-        print("--add-rule")
+        addRules()
     elif arguments[1:2][0] == "--add-new-server":
         print("--add-new-server")
     elif arguments[1:2][0] == "--remove-rule-with-id":
-        print("--remove-rule-with-id")
+        removeRuleID()
     elif arguments[1:2][0] == "--remove-server":
         print("--remove-server")
 
@@ -119,8 +119,59 @@ def listServers():
     print(tabulate(data_as_list, headers=headers, tablefmt="grid"))
  
 def addRules():
+    database = mysql.connector.connect(
+        host="localhost",
+        user="bcp_grafana",
+        password="bcp_Grafana@123",
+        database="bcp_grafana")
+    
+    dbcursor = database.cursor()
+    print("INFO: Provide below Information for the Rule.")
+    projectName = input("Project Name:\t")
+    srcPath = input("Local Server Path:\t")
+    destPath = input("BCP Server Path:\t")
+    extensions = input("Extension Name: [Optional]\t")
+
+    sql_query = f"""INSERT INTO bcpSyncRules (projectName, srcPath, destPath, extensions) VALUES (%s, %s, %s, %s)"""
+    values = (projectName, srcPath, destPath, extensions)
+
+    dbcursor.execute(sql_query, values)
+    database.commit()
+
+    sql_query = f""" 
+        select * from bcpSyncRules where projectName = "{projectName}" AND srcPath = "{srcPath}" AND destPath = "{destPath}"
+    """
+    dbcursor.execute(sql_query)
+    output = dbcursor.fetchall()
+
+    data_as_list = [list(item) for item in output]
+    headers = ["Project Name", "Local Server Path", "BCP Server Path", "Extension Name"]
+    print(tabulate(data_as_list, headers=headers, tablefmt="grid"))
+    print("INFO: Rule added successfully.")
+    
+
     # INSERT INTO bcpSyncRules (projectName, srcPath, destPath, extensions) VALUES ("YAS", "/usr/local/tbx/yasqa/Scheduler_Resources/", "/usr/local/tbx/yasqa/Scheduler_Resources/", "");
-    pass
+    
+def removeRuleID():
+    database = mysql.connector.connect(
+        host="localhost",
+        user="bcp_grafana",
+        password="bcp_Grafana@123",
+        database="bcp_grafana")
+    
+    dbcursor = database.cursor()
+    ruleID = input("Rule ID to remove:\t")
+    sql_query = f""" 
+        DELETE FROM bcpSyncRules WHERE ruleID = '{ruleID}';
+
+    """
+
+    dbcursor.execute(sql_query)
+    database.commit()
+    dbcursor.close()
+    database.close()
+    print("INFO: Rule has been removed successfuly")    
+    
 
 main(arguments)
 
