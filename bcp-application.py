@@ -15,9 +15,10 @@ def addToDatabase(csvFileName):
     
     if os.path.isfile(f"/var/lib/mysql-files/{csvFileName}"):
         os.remove(f"/var/lib/mysql-files/{csvFileName}")
-    
-    shutil.copy("DATA/" + FOLDER_NAME + f"/{csvFileName}", "/var/lib/mysql-files/")
-
+    try:
+        shutil.copy("DATA/" + FOLDER_NAME + f"/{csvFileName}", "/var/lib/mysql-files/")
+    except:
+        print("Error: An error occured file copying the file.")
     dbcursor_1 = database.cursor()
 
     sql_query = f""" 
