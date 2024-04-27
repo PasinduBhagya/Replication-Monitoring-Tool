@@ -1,1 +1,20 @@
 python3.8 -m pip install mysql-connector-python
+
+CREATE TABLE bcpSyncRules (
+    ruleID INT AUTO_INCREMENT PRIMARY KEY,
+    projectName VARCHAR(255),
+    localServerPath VARCHAR(255),
+    bcpServerPath VARCHAR(255),
+    serversID INT,  -- Assuming serversID is a foreign key referencing serversID in bcpServerDetails table
+    extensions VARCHAR(255),
+    alias VARCHAR(255)
+);
+
+CREATE TABLE bcpServerDetails (
+    serversID INT AUTO_INCREMENT PRIMARY KEY, -- Assuming serversID is an auto-incremented primary key
+    projectName VARCHAR(50),
+    localServerIP VARCHAR(50),
+    localUsername VARCHAR(50),
+    BCPServerIP VARCHAR(50),
+    BCPUsername VARCHAR(50)
+);
