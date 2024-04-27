@@ -1,20 +1,22 @@
-python3.8 -m pip install mysql-connector-python
+CREATE TABLE `bcpServerDetails` (
+  `serversID` int NOT NULL AUTO_INCREMENT,
+  `projectName` varchar(50) DEFAULT NULL,
+  `localServerIP` varchar(50) DEFAULT NULL,
+  `localUsername` varchar(50) DEFAULT NULL,
+  `BCPServerIP` varchar(50) DEFAULT NULL,
+  `BCPUsername` varchar(50) DEFAULT NULL,
+  `alias` varchar(50) DEFAULT NULL,
+  PRIMARY KEY (`serversID`)
+) ENGINE=InnoDB AUTO_INCREMENT=10 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci
 
-CREATE TABLE bcpSyncRules (
-    ruleID INT AUTO_INCREMENT PRIMARY KEY,
-    projectName VARCHAR(255),
-    localServerPath VARCHAR(255),
-    bcpServerPath VARCHAR(255),
-    serversID INT,  -- Assuming serversID is a foreign key referencing serversID in bcpServerDetails table
-    extensions VARCHAR(255),
-    alias VARCHAR(255)
-);
 
-CREATE TABLE bcpServerDetails (
-    serversID INT AUTO_INCREMENT PRIMARY KEY, -- Assuming serversID is an auto-incremented primary key
-    projectName VARCHAR(50),
-    localServerIP VARCHAR(50),
-    localUsername VARCHAR(50),
-    BCPServerIP VARCHAR(50),
-    BCPUsername VARCHAR(50)
-);
+CREATE TABLE `bcpSyncRules` (
+  `ruleID` int NOT NULL AUTO_INCREMENT,
+  `projectName` varchar(255) DEFAULT NULL,
+  `localServerPath` varchar(255) DEFAULT NULL,
+  `bcpServerPath` varchar(255) DEFAULT NULL,
+  `serversID` int DEFAULT NULL,
+  `extensions` varchar(255) DEFAULT NULL,
+  `alias` varchar(255) DEFAULT NULL,
+  PRIMARY KEY (`ruleID`)
+) ENGINE=InnoDB AUTO_INCREMENT=12 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci
