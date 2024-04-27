@@ -17,16 +17,16 @@ def main(arguments):
 
         --help\t: Print this help message and exit.
           
-        --list-projects\t:
-        --list-rules\t:
-        --list-servers\t:
+        --list-projects\t: List all available projects along with their details
+        --list-rules\t: Display a comprehensive list of rules associated with the projects
+        --list-servers\t: Show all registered Local BCP server pairs
                  
-        --add-rule\t:
-        --add-new-server\t:
+        --add-rule\t: Add a new rule to specify synchronization criteria
+        --add-new-server\t: Register a new Local BCP server pair
           
-        --remove-rule-with-id\t:       
-        --remove-server\t:
-        --show-logs\t:       
+        --remove-rule-with-id\t: Remove a specific rule identified by its unique ID   
+        --remove-server\t: Delete a Local BCP server pair (will remove all Rules associated with that pair)
+        --show-logs\t: To be code     
     
     If you need any other support, please contact Pasindu Bhagya - pasindub@codegen.net.
     ''')
