@@ -6,20 +6,33 @@ import shutil
 FOLDER_NAME = datetime.now().strftime("%Y-%m-%d")
 YESTERDAY_DATE = (datetime.now() - timedelta(days=1)).strftime("%Y-%m-%d")
 
-def addToDatabase(csvFileName):
-    database = mysql.connector.connect(
+import os
+import shutil
+import mysql.connector
+
+def connectToDatabase():
+    return mysql.connector.connect(
         host="localhost",
         user="bcp_grafana",
         password="bcp_Grafana@123",
-        database="bcp_grafana")
-    
+        database="bcp_grafana"
+    )
+
+def fetchFromDatabase(sql_query):
+    database = connectToDatabase()
+    dbcursor = database.cursor()
+    dbcursor.execute(sql_query)
+    output = dbcursor.fetchall()
+    database.close() 
+    return output
+
+def addToDatabase(csvFileName):
+    database = connectToDatabase()
     if os.path.isfile(f"/var/lib/mysql-files/{csvFileName}"):
         os.remove(f"/var/lib/mysql-files/{csvFileName}")
     try:
-        shutil.copy("DATA/" + FOLDER_NAME + f"/{csvFileName}", "/var/lib/mysql-files/")
-    
-        dbcursor_1 = database.cursor()
-
+        shutil.copy(f"DATA/{FOLDER_NAME}/{csvFileName}", "/var/lib/mysql-files/")
+        dbcursor = database.cursor()
         sql_query = f""" 
             LOAD DATA INFILE '/var/lib/mysql-files/{csvFileName}'
             INTO TABLE statusProgress
@@ -27,67 +40,47 @@ def addToDatabase(csvFileName):
             ENCLOSED BY '"'
             LINES TERMINATED BY '\n'
         """
-
-        dbcursor_1.execute(sql_query)
+        dbcursor.execute(sql_query)
         database.commit()
-
-        dbcursor_1.close()
+        dbcursor.close()
         database.close()
         print("INFO: Importing to database is completed.")
     except:
-        print("Error: An error occured file copying the file.")
+        print("Error: An error occurred while copying the file.")
 
-def getItemsFromDatabase(PROJECT,YESTERDAY_DATE):
-    database = mysql.connector.connect(
-        host="localhost",
-        user="bcp_grafana",
-        password="bcp_Grafana@123",
-        database="bcp_grafana")
-    
+def getItemsFromDatabase(PROJECT, YESTERDAY_DATE):
+    database = connectToDatabase()
     item_list_per_project = []
     dbcursor = database.cursor()
-
     sql_query = f""" 
-        select itemName from statusProgress where dateTime = "{YESTERDAY_DATE}" AND itemType = "{PROJECT}"
+        SELECT itemName FROM statusProgress WHERE dateTime = "{YESTERDAY_DATE}" AND itemType = "{PROJECT}"
     """
-
     dbcursor.execute(sql_query)
     output = dbcursor.fetchall()
     for row in output:
         item_list_per_project.append(row[0])
-    
     return item_list_per_project
 
 def getProjectStatusFromDatabase(PROJECT):
-    database = mysql.connector.connect(
-        host="localhost",
-        user="bcp_grafana",
-        password="bcp_Grafana@123",
-        database="bcp_grafana")
-    
+    database = connectToDatabase()
     status_list_per_project = []
-    dbcursor_2 = database.cursor()
-
+    dbcursor = database.cursor()
     sql_query = f""" 
-        select status from statusProgress where dateTime = "{FOLDER_NAME}" AND itemType = "{PROJECT}"
+        SELECT status FROM statusProgress WHERE dateTime = "{FOLDER_NAME}" AND itemType = "{PROJECT}"
     """
-
-    dbcursor_2.execute(sql_query)
-    output = dbcursor_2.fetchall()
+    dbcursor.execute(sql_query)
+    output = dbcursor.fetchall()
     for row in output:
         status_list_per_project.append(row[0])
-    
     print(f"INFO: Status of {PROJECT}" + str(status_list_per_project))
-    if "Failed" in status_list_per_project:
-        print(f"INFO: One or more Items has failed on {PROJECT}. Therefore overall project status set to Failed.")
-        PROJECT_STATUS = "Failed"
-    elif "No Data" in status_list_per_project:
-        print(f"INFO: One or more Items has no data on {PROJECT}. Therefore overall project status set to Failed.")
+    if "Failed" in status_list_per_project or "No Data" in status_list_per_project:
+        print(f"INFO: One or more Items has failed or has no data on {PROJECT}. Therefore overall project status set to Failed.")
         PROJECT_STATUS = "Failed"
     else:
         print(f"INFO: All Items are in Success state on {PROJECT}. Therefore overall project status set to Success.")
         PROJECT_STATUS = "Success"
-    return PROJECT_STATUS    
+    return PROJECT_STATUS 
+   
 
 def main():
 
