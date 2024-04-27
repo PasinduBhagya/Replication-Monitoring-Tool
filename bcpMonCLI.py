@@ -98,6 +98,7 @@ def listProjects():
     """
     try: 
         output = fetchFromDatabase(sql_query)
+    
         for row in output:
             print(row[0])
     except:
@@ -201,7 +202,7 @@ def addNewServer():
     dbcursor = database.cursor()
     
     print("INFO: Provide below Information for the Rule.")
-    projectName = input("Project Name:\t")
+    projectName = input("Project Name:\t")    
     localServerIP = input("Local Server IP:\t")
     localUsername = input("Local Server Username:\t")
     print(f"INFO: Copying public Key to the {localServerIP} for {localUsername}")
