@@ -123,7 +123,8 @@ def getRuleID():
                 if value == BCP_MD5SUM_HASH[key]:
                     print(f"INFO: File {key} is same on the both servers.")
                 else:
-                    print(f"Warning: File {key} is not same on the both servers.")        
+                    print(f"Warning: File {key} is not same on the both servers.")
+                    SYNC_STATUS = "Failed"        
             else:
                 print(f"Warning: File {key} was not found in BCP Enviorment.")
                 SYNC_STATUS = "Failed"
