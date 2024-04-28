@@ -115,7 +115,7 @@ def getRuleID():
     
     for ruleInfo in rulesInfo:
         print("-"*90)
-        print("INFO: Starting rule ID - " + str(ruleInfo[0]))
+        print("INFO: Starting rule ID - " + str(ruleInfo[0]) + " " + str(ruleInfo[-1]))
         
         projectName = ruleInfo[1]
         localServerPath = ruleInfo[2]
