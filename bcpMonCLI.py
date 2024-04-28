@@ -2,8 +2,6 @@ import sys
 import subprocess
 import mysql.connector
 from tabulate import tabulate
-
-arguments = sys.argv
   
 def main(arguments):
     if len(arguments) == 1:
@@ -289,11 +287,7 @@ def removServer():
         print("INFO: Server has been removed successfully.")
     else:
         print("INFO: Server was not removed")
- 
-    
-        
-    
+   
 if __name__ == "__main__":
-    import sys
     main(sys.argv)
 

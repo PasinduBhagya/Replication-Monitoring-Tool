@@ -22,17 +22,36 @@ def fetchFromDatabase(sql_query):
     
     return output
 
+def checkExtFileAvailability(extensions, username, serverIP, serverPath):
+    exensionString = ""
+    for extension in extensions.split(","):
+        print(f"INFO: Looking for files with {extension} extension, on {serverIP} in {serverPath} path.")
+        LINUX_COMMAND = f'''ssh {username}@{serverIP}  "cd {serverPath} && ls *.{extension}"'''
+        try:
+            COMMAND_OUTPUT = subprocess.check_output(LINUX_COMMAND, shell=True, stderr=subprocess.STDOUT)
+            OUTPUT_AS_LIST = COMMAND_OUTPUT.decode('utf-8').split("\n")
+            exensionString = exensionString + "*." + extension + " "
+        except subprocess.CalledProcessError as e:
+            if e.returncode == 2:
+                print(f"Warning: No files found with {extension} extension, on {serverIP} in {serverPath} path.")
+            else:
+                print(f"Error: Failed to execute the listing Command on {serverIP} server.")
+    
+    return exensionString
+
 def getLocalServerMD5Sum(localServerPath, extensions, localServerIP, localUsername, projectName):
     
     LOCAL_MD5SUM_HASH = {}
-    
     if extensions == "Any":
         LINUX_COMMAND = f'''ssh {localUsername}@{localServerIP}  "cd {localServerPath} && md5sum *"'''
-            
+    else:
+        exensionString = checkExtFileAvailability(extensions, localUsername, localServerIP, localServerPath)
+        LINUX_COMMAND = f'''ssh {localUsername}@{localServerIP}  "cd {localServerPath} && md5sum {exensionString}"'''
+        
     try:
         COMMAND_OUTPUT = subprocess.check_output(LINUX_COMMAND, shell=True, stderr=subprocess.STDOUT)
 
-        print(f"INFO: Gathering - Project({projectName}) - IP({localServerIP}) - Path({localServerPath})")
+        print(f"INFO: Gathering MD5SUM - Project({projectName}) - IP({localServerIP}) - Path({localServerPath})")
                 
         OUTPUT_AS_LIST = COMMAND_OUTPUT.decode('utf-8').split("\n")
         
@@ -56,9 +75,11 @@ def getLocalServerMD5Sum(localServerPath, extensions, localServerIP, localUserna
 def getBCPServerMD5Sum(bcpServerPath, extensions, BCPServerIP, BCPUsername, projectName):
     
     BCP_MD5SUM_HASH = {}
-    
     if extensions == "Any":
         LINUX_COMMAND = f'''ssh {BCPUsername}@{BCPServerIP}  "cd {bcpServerPath} && md5sum *"'''
+    else:
+        exensionString = checkExtFileAvailability(extensions, BCPUsername, BCPServerIP, bcpServerPath)
+        LINUX_COMMAND = f'''ssh {BCPUsername}@{BCPServerIP}  "cd {bcpServerPath} && md5sum {exensionString}"'''
             
     try:
         COMMAND_OUTPUT = subprocess.check_output(LINUX_COMMAND, shell=True, stderr=subprocess.STDOUT)
@@ -80,7 +101,7 @@ def getBCPServerMD5Sum(bcpServerPath, extensions, BCPServerIP, BCPUsername, proj
         return BCP_MD5SUM_HASH
         
     except subprocess.CalledProcessError as e:
-        print(f"Error executing command: {e}")
+        print(f"Error: Information gathering command executing is failed {e}")
         
 
 def getRuleID():
@@ -117,28 +138,29 @@ def getRuleID():
         
         LOCAL_MD5SUM_HASH = getLocalServerMD5Sum(localServerPath, extensions, localServerIP, localUsername, projectName)
         BCP_MD5SUM_HASH = getBCPServerMD5Sum(bcpServerPath, extensions, BCPServerIP, BCPUsername, projectName)
-        
-        for key, value in LOCAL_MD5SUM_HASH.items():
-            if key in BCP_MD5SUM_HASH:
-                if value == BCP_MD5SUM_HASH[key]:
-                    print(f"INFO: File {key} is same on the both servers.")
+        try:
+            for key, value in LOCAL_MD5SUM_HASH.items():
+                if key in BCP_MD5SUM_HASH:
+                    if value == BCP_MD5SUM_HASH[key]:
+                        print(f"INFO: File {key} is same on the both servers.")
+                    else:
+                        print(f"Warning: File {key} is not same on the both servers.")
+                        SYNC_STATUS = "Failed"        
                 else:
-                    print(f"Warning: File {key} is not same on the both servers.")
-                    SYNC_STATUS = "Failed"        
-            else:
-                print(f"Warning: File {key} was not found in BCP Enviorment.")
-                SYNC_STATUS = "Failed"
-        
-        if not os.path.exists("DATA/" + DATE_FOLDER):
-            try:
-                os.makedirs("DATA/" + DATE_FOLDER)
-                print(f"INFO: {DATE_FOLDER} folder has been created successfully.")
-            except:
-                print("Error: Unable to create the DATA/" + DATE_FOLDER)
+                    print(f"Warning: File {key} was not found in BCP Enviorment.")
+                    SYNC_STATUS = "Failed"
             
-        with open("DATA/" + DATE_FOLDER + "/" +  projectName, 'a') as projectFile:
-            projectFile.write(f"{alias},{SYNC_STATUS}\n")
-        
+            if not os.path.exists("DATA/" + DATE_FOLDER):
+                try:
+                    os.makedirs("DATA/" + DATE_FOLDER)
+                    print(f"INFO: {DATE_FOLDER} folder has been created successfully.")
+                except:
+                    print("Error: Unable to create the DATA/" + DATE_FOLDER)
+                
+            with open("DATA/" + DATE_FOLDER + "/" +  projectName, 'a') as projectFile:
+                projectFile.write(f"{alias},{SYNC_STATUS}\n")
+        except:
+            print("Error: The server did not return data for given extensions.") 
         print("-"*90)    
 
         
