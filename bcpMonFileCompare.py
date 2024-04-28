@@ -65,9 +65,7 @@ def getLocalServerMD5Sum(localServerPath, extensions, localServerIP, localUserna
 
             LOCAL_MD5SUM_HASH[key] = value
         
-        
         return LOCAL_MD5SUM_HASH
-        
         
     except subprocess.CalledProcessError as e:
         print(f"Error executing command: {e}")
@@ -102,7 +100,6 @@ def getBCPServerMD5Sum(bcpServerPath, extensions, BCPServerIP, BCPUsername, proj
         
     except subprocess.CalledProcessError as e:
         print(f"Error: Information gathering command executing is failed {e}")
-        
 
 def getRuleID():
     
