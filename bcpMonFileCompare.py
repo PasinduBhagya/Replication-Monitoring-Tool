@@ -107,7 +107,7 @@ def getRuleID():
     
     checkedRulesList = []
 
-    with open(".cache/checkedRules", 'r') as checkedRules:
+    with open(f".cache/{DATE_FOLDER}_checkedRules", 'r') as checkedRules:
         for checkedRule in checkedRules:
             checkedRulesList.append(int(checkedRule.strip()))
     
@@ -166,7 +166,7 @@ def getRuleID():
                     
                 with open("DATA/" + DATE_FOLDER + "/" +  projectName, 'a') as projectFile:
                     projectFile.write(f"{alias},{SYNC_STATUS}\n")
-                with open(".cache/checkedRules", 'a') as checkedRules:
+                with open(f".cache/{DATE_FOLDER}_checkedRules", 'a') as checkedRules:
                     checkedRules.write(str(ruleInfo[0]) + "\n")
             except:
                 print("Error: The server did not return data for given extensions.") 
