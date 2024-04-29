@@ -167,7 +167,7 @@ def getRuleID():
                 with open("DATA/" + DATE_FOLDER + "/" +  projectName, 'a') as projectFile:
                     projectFile.write(f"{alias},{SYNC_STATUS}\n")
                 with open(".cache/checkedRules", 'a') as checkedRules:
-                    checkedRules.write("\n"+str(ruleInfo[0]))
+                    checkedRules.write(str(ruleInfo[0]) + "\n")
             except:
                 print("Error: The server did not return data for given extensions.") 
             print("-"*90)    
