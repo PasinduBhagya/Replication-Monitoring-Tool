@@ -59,9 +59,12 @@ def getLocalServerMD5Sum(localServerPath, extensions, localServerIP, localUserna
 
         for resultLine in OUTPUT_AS_LIST:
             
-            values = resultLine.split()
-            key = values[1]
-            value = values[0]
+            try:
+                values = resultLine.split()
+                key = values[1]
+                value = values[0]
+            except:
+                print("Warning: Invalid output recived from the server: " + resultLine)
 
             LOCAL_MD5SUM_HASH[key] = value
         
@@ -90,9 +93,12 @@ def getBCPServerMD5Sum(bcpServerPath, extensions, BCPServerIP, BCPUsername, proj
 
         for resultLine in OUTPUT_AS_LIST:
             
-            values = resultLine.split()
-            key = values[1]
-            value = values[0]
+            try:
+                values = resultLine.split()
+                key = values[1]
+                value = values[0]
+            except:
+                print("Warning: Invalid output recived from the server: " + resultLine)
 
             BCP_MD5SUM_HASH[key] = value
         
