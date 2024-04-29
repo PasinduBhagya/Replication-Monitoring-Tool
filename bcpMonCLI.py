@@ -3,7 +3,7 @@ import sys
 import subprocess
 import mysql.connector
 from tabulate import tabulate
-
+from bcpMonFileCompare import main as fileComparison
 
   
 def main(arguments):
@@ -27,6 +27,8 @@ def main(arguments):
           
         --remove-rule-with-id\t: Remove a specific rule identified by its unique ID   
         --remove-server\t: Delete a Local BCP server pair (will remove all Rules associated with that pair)
+        
+        --run-rules\t: To manualy run the rules
         --show-logs\t: To be code     
     
     If you need any other support, please contact Pasindu Bhagya - pasindub@codegen.net.
@@ -41,7 +43,8 @@ def main(arguments):
                            "--add-new-server", 
                            "--remove-rule-with-id", 
                            "--remove-server",
-                           "--show-logs"] for element in arguments[1:]):
+                           "--show-logs",
+                           "--run-rules"] for element in arguments[1:]):
         print('''\nError: Invalid arguments provided.\n''')
         exit()
         
@@ -74,6 +77,14 @@ def main(arguments):
         
     elif arguments[1:2][0] == "--show-logs":
         print("--show-logs")
+
+    elif arguments[1:2][0] == "--run-rules":
+        print("INFO: This will execute the on all rules. Do you wish to continue? [Yes]")
+        confirmation = input("")
+        if confirmation != "Yes":
+            print("INFO: Exiting.")
+            exit(0)
+        fileComparison()
         
 def connectToDatabase():
     return mysql.connector.connect(
