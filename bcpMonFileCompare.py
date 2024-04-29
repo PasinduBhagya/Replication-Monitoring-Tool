@@ -117,7 +117,6 @@ def getRuleID():
     rulesInfo = fetchFromDatabase(sql_query)
     
     for ruleInfo in rulesInfo:
-        print(ruleInfo)
         print("-"*90)
         print("INFO: Starting rule ID - " + str(ruleInfo[0]) + " " + str(ruleInfo[-1]))
 
