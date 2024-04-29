@@ -107,6 +107,10 @@ def getRuleID():
     
     checkedRulesList = []
 
+    if not os.path.exists(f".cache/{DATE_FOLDER}_checkedRules"):
+        with open(f".cache/{DATE_FOLDER}_checkedRules") as cachedFile:
+            pass
+
     with open(f".cache/{DATE_FOLDER}_checkedRules", 'r') as checkedRules:
         for checkedRule in checkedRules:
             checkedRulesList.append(int(checkedRule.strip()))
