@@ -26,18 +26,19 @@ def checkExtFileAvailability(extensions, username, serverIP, serverPath):
     exensionString = ""
     for extension in extensions.split(","):
         print(f"INFO: Looking for files with {extension} extension, on {serverIP} in {serverPath} path.")
-        LINUX_COMMAND = f'''ssh {username}@{serverIP}  "cd {serverPath} && ls *.{extension}"'''
+        LINUX_COMMAND = f'''ssh {username}@{serverIP} -o ConnectTimeout=10  "cd {serverPath} && ls *.{extension}"'''
         try:
             COMMAND_OUTPUT = subprocess.check_output(LINUX_COMMAND, shell=True, stderr=subprocess.STDOUT)
             OUTPUT_AS_LIST = COMMAND_OUTPUT.decode('utf-8').split("\n")
             exensionString = exensionString + "*." + extension + " "
+            
+            return exensionString
+        
         except subprocess.CalledProcessError as e:
             if e.returncode == 2:
                 print(f"Warning: No files found with {extension} extension, on {serverIP} in {serverPath} path.")
             else:
                 print(f"Error: Failed to execute the listing Command on {serverIP} server.")
-    
-    return exensionString
 
 def getLocalServerMD5Sum(localServerPath, extensions, localServerIP, localUsername, projectName):
     
@@ -46,7 +47,7 @@ def getLocalServerMD5Sum(localServerPath, extensions, localServerIP, localUserna
         LINUX_COMMAND = f'''ssh {localUsername}@{localServerIP}  "cd {localServerPath} && md5sum *"'''
     else:
         exensionString = checkExtFileAvailability(extensions, localUsername, localServerIP, localServerPath)
-        LINUX_COMMAND = f'''ssh {localUsername}@{localServerIP}  "cd {localServerPath} && md5sum {exensionString}"'''
+        LINUX_COMMAND = f'''ssh {localUsername}@{localServerIP} -o ConnectTimeout=10  "cd {localServerPath} && md5sum {exensionString}"'''
         
     try:
         COMMAND_OUTPUT = subprocess.check_output(LINUX_COMMAND, shell=True, stderr=subprocess.STDOUT)
@@ -80,7 +81,7 @@ def getBCPServerMD5Sum(bcpServerPath, extensions, BCPServerIP, BCPUsername, proj
         LINUX_COMMAND = f'''ssh {BCPUsername}@{BCPServerIP}  "cd {bcpServerPath} && md5sum *"'''
     else:
         exensionString = checkExtFileAvailability(extensions, BCPUsername, BCPServerIP, bcpServerPath)
-        LINUX_COMMAND = f'''ssh {BCPUsername}@{BCPServerIP}  "cd {bcpServerPath} && md5sum {exensionString}"'''
+        LINUX_COMMAND = f'''ssh {BCPUsername}@{BCPServerIP} -o ConnectTimeout=10  "cd {bcpServerPath} && md5sum {exensionString}"'''
             
     try:
         COMMAND_OUTPUT = subprocess.check_output(LINUX_COMMAND, shell=True, stderr=subprocess.STDOUT)
