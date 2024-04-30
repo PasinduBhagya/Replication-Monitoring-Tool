@@ -1,4 +1,5 @@
 CREATE TABLE `statusProgress` (
+  `statusID` int NOT NULL AUTO_INCREMENT,
   `dateTime` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
   `itemName` varchar(255) DEFAULT NULL,
   `status` varchar(50) DEFAULT NULL,

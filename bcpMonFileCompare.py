@@ -3,6 +3,7 @@ import subprocess
 from datetime import datetime
 import os
 import re
+
 DATE_FOLDER = datetime.now().strftime("%Y-%m-%d")
 
 def connectToDatabase():
@@ -148,12 +149,15 @@ def getRuleID():
     for ruleInfo in rulesInfo:
         print("-"*90)
         print("INFO: Starting rule ID - " + str(ruleInfo[0]) + " " + str(ruleInfo[-1]))
-
+        
         if int(ruleInfo[0]) in checkedRulesList:
             print(f"INFO: Skipping rule ID - {ruleInfo[0]}.")
 
         else:
             projectName = ruleInfo[1]
+            # Creating a Blank Project File
+            with open("DATA/" + DATE_FOLDER + "/" +  projectName, 'a') as projectFile:
+                pass
             localServerPath = ruleInfo[2]
             bcpServerPath = ruleInfo[3]
             serversID = ruleInfo[4]

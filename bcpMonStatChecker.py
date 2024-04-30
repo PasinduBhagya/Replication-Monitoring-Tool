@@ -150,7 +150,7 @@ def main():
         addToDatabase(csvFileName="ProjectStatusFile.csv")    
 
     else:
-        print( "Error: " + FOLDER_NAME + "was not found..")
+        print( "Error: " + FOLDER_NAME + " was not found..")
 
 if __name__ == "__main__":
     main()

@@ -84,7 +84,8 @@ def main(arguments):
         if confirmation != "Yes":
             print("INFO: Exiting.")
             exit(0)
-        fileComparison()
+        else:
+            fileComparison()
         
 def connectToDatabase():
     return mysql.connector.connect(
