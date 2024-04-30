@@ -39,6 +39,7 @@ def addToDatabase(csvFileName):
             FIELDS TERMINATED BY ','
             ENCLOSED BY '"'
             LINES TERMINATED BY '\n'
+            (dateTime, itemName, status, itemType)
         """
         dbcursor.execute(sql_query)
         database.commit()
