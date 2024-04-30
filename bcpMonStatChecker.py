@@ -26,8 +26,19 @@ def fetchFromDatabase(sql_query):
     database.close() 
     return output
 
+def removeTodayData(FOLDER_NAME):
+    database = connectToDatabase()
+    dbcursor = database.cursor()
+     # Remove exiting Data for the date
+    sql_query = f'''delete from statusProgress where dateTime = "{FOLDER_NAME} 00:00:00"'''
+    dbcursor.execute(sql_query)
+    database.commit()
+    dbcursor.close()
+    database.close()
+
 def addToDatabase(csvFileName):
     database = connectToDatabase()
+   
     if os.path.isfile(f"/var/lib/mysql-files/{csvFileName}"):
         os.remove(f"/var/lib/mysql-files/{csvFileName}")
     try:

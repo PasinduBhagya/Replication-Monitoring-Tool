@@ -226,8 +226,10 @@ def addNewServer():
     except:
         print(f"Error: Unable to copy the public to {localServerIP} for {localUsername}")
         print(f"Please copy the below Public Key of the /home/{localUsername}.ssh/authorized_keys manually of the {localServerIP}")
+        print("-"*100)
         PubliKey = f'''ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQC0hPZhk2DqjoHNj4DIEMkjamuQvfHJvU5PXWLRBPEk3SYBVMslyS8YAdKeR9F6poLrkxr3N9PCr0oc7jPEKsFAz8AOUsv6sYO4WwHFaBxVHW7tfkU7ov+e91Wj0Msem9v202VUuZvKvZe3HrQ4Tgoua7aWwUj62+dqvBGdbILGNcxTZh9bYD0p2iTxuY4geB6WcHwI23wC5n9/lzWMd5CuX7CaAa32DRCNrtWR+Ymx7MrWkp3LA64ObaNvRNnXkvzAwj3/JhwjsBvEY2jzP4qAT7/Fg6IHL2nCQfO4qMlkhT7ihksdpLa+lfhBER5PIks3G1yZmxksfFsiY1nQ1P1h {localUsername}@localhost.localdomain'''
         print(PubliKey)
+        print("-"*100)
     BCPServerIP = input("BCP Server IP:\t")
     BCPUsername = input("BCP Server Username:\t")
     

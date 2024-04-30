@@ -62,7 +62,7 @@ def getLocalServerMD5Sum(localServerPath, extensions, localServerIP, localUserna
         
         OUTPUT_AS_LIST = list(filter(bool, OUTPUT_AS_LIST))
 
-        for resultLine in OUTPUT_AS_LIST:
+        for resultLine in OUTPUT_AS_LIST: # 231edf7e334e7135e02832744d2d65b9  bcpMonStatChecker.py
             
             try:
                 values = resultLine.split()
