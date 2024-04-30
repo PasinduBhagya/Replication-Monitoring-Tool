@@ -72,16 +72,16 @@ def getProjectStatusFromDatabase(PROJECT):
     output = dbcursor.fetchall()
     for row in output:
         status_list_per_project.append(row[0])
-    print(f"INFO: Status of {PROJECT}" + str(status_list_per_project))
+    print(f"INFO: Status of {PROJECT} - " + str(status_list_per_project))
     if "Failed" in status_list_per_project or "No Data" in status_list_per_project:
         print(f"INFO: One or more Items has failed or has no data on {PROJECT}. Therefore overall project status set to Failed.")
         PROJECT_STATUS = "Failed"
-    elif all(status == "Success" for status in status_list_per_project):
+    elif len(status_list_per_project) == 0:
+        print(f"INFO: No Data was found for {PROJECT}. Therefore overall project status set to No Data.")
+        PROJECT_STATUS = "No Data"
+    else:
         print(f"INFO: All Items are in Success state on {PROJECT}. Therefore overall project status set to Success.")
         PROJECT_STATUS = "Success"
-    else:
-        print(f"Warining: No Success, Failed or No Data Found for this Project")
-        PROJECT_STATUS = "Failed"
     return PROJECT_STATUS 
    
 
