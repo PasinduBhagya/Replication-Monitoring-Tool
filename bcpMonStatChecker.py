@@ -45,8 +45,8 @@ def addToDatabase(csvFileName):
         dbcursor.close()
         database.close()
         print("INFO: Importing to database is completed.")
-    except:
-        print("Error: An error occurred while copying the file.")
+    except Exception as e:
+        print("Error: An error occurred while copying the file. " + e)
 
 def getItemsFromDatabase(PROJECT, YESTERDAY_DATE):
     database = connectToDatabase()
