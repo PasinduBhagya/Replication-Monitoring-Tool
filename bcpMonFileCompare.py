@@ -40,6 +40,9 @@ def checkExtFileAvailability(extensions, username, serverIP, serverPath):
             else:
                 print(f"Error: Failed to execute the listing Command on {serverIP} server.")
 
+        except subprocess.TimeoutExpired:
+            print(f"Error: Connection to {serverIP} timed out. Please check your network connection and try again.")
+
 def getLocalServerMD5Sum(localServerPath, extensions, localServerIP, localUsername, projectName):
     
     LOCAL_MD5SUM_HASH = {}
@@ -73,6 +76,9 @@ def getLocalServerMD5Sum(localServerPath, extensions, localServerIP, localUserna
         
     except subprocess.CalledProcessError as e:
         print(f"Error executing command: {e}")
+    
+    except subprocess.TimeoutExpired:
+            print(f"Error: Connection to {localServerIP} timed out. Please check your network connection and try again.")
 
 def getBCPServerMD5Sum(bcpServerPath, extensions, BCPServerIP, BCPUsername, projectName):
     
@@ -107,6 +113,9 @@ def getBCPServerMD5Sum(bcpServerPath, extensions, BCPServerIP, BCPUsername, proj
         
     except subprocess.CalledProcessError as e:
         print(f"Error: Information gathering command executing is failed {e}")
+    
+    except subprocess.TimeoutExpired:
+            print(f"Error: Connection to {BCPServerIP} timed out. Please check your network connection and try again.")
 
 def getRuleID():
     
