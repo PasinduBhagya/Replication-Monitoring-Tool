@@ -2,7 +2,7 @@ import mysql.connector
 import subprocess
 from datetime import datetime
 import os
-
+import re
 DATE_FOLDER = datetime.now().strftime("%Y-%m-%d")
 
 def connectToDatabase():
@@ -67,10 +67,15 @@ def getLocalServerMD5Sum(localServerPath, extensions, localServerIP, localUserna
                 values = resultLine.split()
                 key = values[1]
                 value = values[0]
+                # To check whether the return value is MD5sum
+                md5_regex = r"^[a-fA-F0-9]{32}$"
+                if bool(re.match(md5_regex, value)):
+                    LOCAL_MD5SUM_HASH[key] = value
+
             except:
                 print("Warning: Invalid output recived from the server: " + resultLine)
 
-            LOCAL_MD5SUM_HASH[key] = value
+            
         
         return LOCAL_MD5SUM_HASH
         
@@ -104,10 +109,14 @@ def getBCPServerMD5Sum(bcpServerPath, extensions, BCPServerIP, BCPUsername, proj
                 values = resultLine.split()
                 key = values[1]
                 value = values[0]
+                
+                # To check whether the return value is MD5sum
+                md5_regex = r"^[a-fA-F0-9]{32}$"
+                if bool(re.match(md5_regex, value)):
+                    BCP_MD5SUM_HASH[key] = value
+
             except:
                 print("Warning: Invalid output recived from the server: " + resultLine)
-
-            BCP_MD5SUM_HASH[key] = value
         
         return BCP_MD5SUM_HASH
         
