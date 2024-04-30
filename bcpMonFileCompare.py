@@ -113,8 +113,8 @@ def getRuleID():
     
     checkedRulesList = []
 
-    if not os.path.exists(f".cache/{DATE_FOLDER}_checkedRules"):
-        with open(f".cache/{DATE_FOLDER}_checkedRules") as cachedFile:
+    if not os.path.isfile(f".cache/{DATE_FOLDER}_checkedRules"):
+        with open(f".cache/{DATE_FOLDER}_checkedRules", 'a+') as cachedFile:
             pass
 
     with open(f".cache/{DATE_FOLDER}_checkedRules", 'r') as checkedRules:
