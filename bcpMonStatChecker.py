@@ -76,9 +76,11 @@ def getProjectStatusFromDatabase(PROJECT):
     if "Failed" in status_list_per_project or "No Data" in status_list_per_project:
         print(f"INFO: One or more Items has failed or has no data on {PROJECT}. Therefore overall project status set to Failed.")
         PROJECT_STATUS = "Failed"
-    else:
+    elif all(status == "Success" for status in status_list_per_project):
         print(f"INFO: All Items are in Success state on {PROJECT}. Therefore overall project status set to Success.")
-        PROJECT_STATUS = "Success"
+    else:
+        print(f"Warining: No Success, Failed or No Data Found for this Project")
+        PROJECT_STATUS = "No Data"
     return PROJECT_STATUS 
    
 
