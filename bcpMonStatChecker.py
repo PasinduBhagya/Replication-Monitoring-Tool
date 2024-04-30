@@ -81,7 +81,7 @@ def getProjectStatusFromDatabase(PROJECT):
         PROJECT_STATUS = "Success"
     else:
         print(f"Warining: No Success, Failed or No Data Found for this Project")
-        PROJECT_STATUS = "No Data"
+        PROJECT_STATUS = "Failed"
     return PROJECT_STATUS 
    
 
