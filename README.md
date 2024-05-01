@@ -116,3 +116,5 @@ Upon initiation, the tool executes each rule sequentially. It begins by logging 
 > Failed: In case any discrepancies are found between the BCP server and the Local Server, synchronization status is set to Failed.
 
 > No Data: If the tool encounters difficulties retrieving data from the servers for analysis, synchronization status is set to No Data.
+
+After determining the status of each folder, the overall project status is assessed. If any folder's synchronization status is set to Failed or No Data during the previous step, the overall project status is set to Failed. Only when all rules indicate Success, the overall project status is set to Success.
