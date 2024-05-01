@@ -16,5 +16,5 @@ Below is a comprehensive diagram which shows all the components of the tool.
 
 1. Local Server and BCP Server** -  Local server is the server which is reponsible to syncing data to BCP Server.
 2. **The Application Server** - This is the server which will have the
-   2.1 Data Gathering tool - This is reponsible for connecting to local server and remote Server collect MD5 sum of two files on the given two directories.
+   - Data Gathering tool - This is reponsible for connecting to local server and remote Server collect MD5 sum of two files on the given two directories.
    
