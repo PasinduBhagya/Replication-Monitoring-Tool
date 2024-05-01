@@ -24,12 +24,14 @@ Below is a comprehensive diagram which shows all the components of the tool.
 3. **MySQL Database:** Stores syncing rules, server pair information, and synchronization status data.
 4. **Grafana Dashboard:** Visualizes stored data, providing users with intuitive insights into synchronization status and any detected discrepancies.
 
-
 ## Grafana Dashboard Overview
 
 ## Monitoring configurations with CLI
 
 To access the command-line interface (CLI) of the tool, utilize the command "bcpsyn" along with the necessary flags. To view a comprehensive list of available commands, execute the following: `bcpsyn --help`. This command will provide a detailed overview of all available flags and their respective functionalities within the tool.
+
+![Screenshot 2024-05-01 134029](https://github.com/PasinduBhagya/BCP-Grafana/assets/63937160/e02f79c3-3454-4d3b-8d8f-bc65cd789d82)
+
 >`--help` - Displays the help menu.
 
 > `--list-projects` - Lists all available projects along with their details.
@@ -51,15 +53,14 @@ To access the command-line interface (CLI) of the tool, utilize the command "bcp
 ### 1. Add a New Server Pair.
 To add a new server pair, please enter the following command: `bcpsyn --add-new-servers` and press enter. Subsequently, the tool will prompt you to input the necessary information for the new server pair.
 
-@ Image here
-
 Upon entering the server username and password, you'll be prompted for the password of the user associated with the specified IP Address. After providing the password, the tool will copy its public key to the authorized keys file of that user. This action enables key-based authentication for future connections to the server.
 
 > [!IMPORTANT]
 > If the tool encounters an issue while attempting to copy the public key during this phase, you will receive a prompt to manually add the public key as directed by the tool.
+> ![Screenshot 2024-05-01 134249](https://github.com/PasinduBhagya/BCP-Grafana/assets/63937160/06fa639b-f26b-4813-8471-625a7f7f2acb)
 
 > [!TIP]
-> It's advisable to verify whether key-based authentication is enabled by using the command "ssh <username>@<IP Address>"
+> It's advisable to verify whether key-based authentication is enabled by using the command "ssh `username`@`IP Address`"
 
 To confirm the addition of the server pair, you can use the command `bcpsyn --list-servers`. This command will display a list of all available servers.
 
