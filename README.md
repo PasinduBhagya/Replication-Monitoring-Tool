@@ -10,4 +10,9 @@ Additionally, a command-line interface has been developed to facilitate CRUD ope
 
 ![BCP Sync Monitoring Tool drawio](https://github.com/PasinduBhagya/BCP-Grafana/assets/63937160/4e2a7c8f-9137-4e29-9b7d-8e68d2db936a)
 
+## Arechitecture of the Tool
 
+Below is a comprehensive diagram which shows all the components of the tool.
+
+1. **Local Server and BCP Server** -  Local server is the server which is reponsible to syncing data to BCP Server.
+2. **The Application Server** - This is the server which will have the 
