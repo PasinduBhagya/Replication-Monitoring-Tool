@@ -8,7 +8,7 @@ The stored data is then utilized to generate comprehensive visualizations throug
 
 Additionally, a command-line interface has been developed to facilitate CRUD operations on server pairs and syncing rules, thereby offering streamlined management and configuration capabilities.
 
-## Arechitecture of the Tool
+## Architecture of the Tool
 
 Below is a comprehensive diagram which shows all the components of the tool.
 
