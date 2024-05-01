@@ -18,11 +18,8 @@ Below is a comprehensive diagram which shows all the components of the tool.
     - Local Server: Responsible for initiating data synchronization to the Backup (BCP) Server.
     - BCP Server: Acts as the destination for synchronized data.
 2. Application Server:
-   -   
-5. **The Application Server** - This is the server which will have the
-   - Data Gathering tool - This is reponsible for connecting to local server and remote Server collect MD5 sum of two files on the given two directories.
-   - Data Analyzign tool - This is reponsible for anaylzing data collect from server.
-   - CLI - A smiple Command Line tool to manage Syncing Rules and Server Pairs
-6. MySQL Database - This will store the data of Syncing rules, server pair informations and Syncing status
-7. Grafana Dashboard - This will represent the data in a more visualization manner to the end user.
-   
+    - Data Gathering Tool: Collects MD5 checksums of files within specified directories from both the local and remote servers
+    - Data Analyzing Tool: Analyzes collected checksums to identify discrepancies between the directories.
+    - CLI (Command Line Interface): Offers a user-friendly command-line interface for managing syncing rules and server pairs.
+3. MySQL Database: Stores syncing rules, server pair information, and synchronization status data.
+4. Grafana Dashboard: Visualizes stored data, providing users with intuitive insights into synchronization status and any detected discrepancies.
