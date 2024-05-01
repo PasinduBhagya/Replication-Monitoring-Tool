@@ -54,7 +54,7 @@ Below all the all possible flags comes with this tool.
 
 > `--run-rules` - Manually runs the rules.
 
-### Add a New Server Pair
+### 1. Add a New Server Pair
 To add  new Server Pair please type `bcpsyn --add-new-servers` and then press enter. Then it will request for the required information. 
 
 @ Image here
@@ -64,17 +64,20 @@ Once you enter the server username and the password, it is prompt for the passwo
 > In case the above public key copy phase fail you need to manualy add the public key will be prompt by the tool after it fails.
 
 To veriy the server Pair was added you can use `bcpsyn --list-servers` command. It will list down all available servers.
-### To Remove a Server Pair
+### 2. To Remove a Server Pair
 To remove a server please enter `bcpsyn --remove-server` and press enter. Then you need to add the serverID that required to be removed. 
 
 > [!WARNING]
 > When you remove a server pair it will remove all the Rules associated with it.
 
-### Add a New Rule
-To add a new Rule please enter `bcpsyn --add-rule` and then press enter. Then it will be prompt you for requesting information. 
+### 3. Add a New Rule
+To add a new Rule enter `bcpsyn --add-rule` and then press enter. Then it will be prompt you for requesting information. 
 
 > [!TIP]
 > The extensions prompt is optional. If you need to check on a specific extension (Ex:- zip, txt) you can add them. If you want to check all the files, leave the prompt empty.
+
+### 4. Remove a rule.
+To remove a rule enter `bcpsyn --remove-rule` command. Then provide the Rule ID that you need to remove and press enter. Then it will remove that rule.
 
 
 ## How the tool works?
