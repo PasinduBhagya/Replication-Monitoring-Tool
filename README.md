@@ -26,6 +26,19 @@ Below is a comprehensive diagram which shows all the components of the tool.
 
 ## Grafana Dashboard Overview
 
+When you logging in, the dashboard appears as below.
+
+<img src="https://github.com/PasinduBhagya/BCP-Grafana/assets/63937160/213386a8-15be-4cdd-a3fb-3d0fc9f31ed7">
+
+1. Dropdown to Select Projects. By Defult the Summary is selected.
+2. Dashboard about status.
+3. Status Count Per Day
+4. Status Count For Last 7 Days
+
+Sample Dashboard when you select a Project from the Dropdown.
+
+![img2](https://github.com/PasinduBhagya/BCP-Grafana/assets/63937160/334d88a7-42c6-4124-b79a-b16067d5dad7)
+
 ## Monitoring configurations with CLI
 
 To access the command-line interface (CLI) of the tool, utilize the command "bcpsyn" along with the necessary flags. To view a comprehensive list of available commands, execute the following: `bcpsyn --help`. This command will provide a detailed overview of all available flags and their respective functionalities within the tool.
