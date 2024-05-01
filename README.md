@@ -1,6 +1,6 @@
 # BCP-Grafana
 
-This tool is designed for monitoring the synchronization status of two directories, whether they reside on the same server or on different servers.
+The main purose of this tool is for monitor the synchronization status of two directories, which are on local server and remote server.
 
 Initially, the tool establishes connections to both servers and retrieves the MD5 checksum values of each file within a specified folder. It then conducts an analysis of these checksum values to detect any discrepancies. Subsequently, the tool proceeds to store this analyzed data into a MySQL database for further processing.
 
@@ -14,5 +14,6 @@ Additionally, a command-line interface has been developed to facilitate CRUD ope
 
 Below is a comprehensive diagram which shows all the components of the tool.
 
-1. **Local Server and BCP Server** -  Local server is the server which is reponsible to syncing data to BCP Server.
-2. **The Application Server** - This is the server which will have the 
+**1. Local Server and BCP Server** -  Local server is the server which is reponsible to syncing data to BCP Server.
+**2. **The Application Server** - This is the server which will have the
+  **2.1 Data Gathering tool - This is reponsible for connecting to local server and remote Server collect MD5 sum of two files on the given two directories.
