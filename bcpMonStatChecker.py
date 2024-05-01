@@ -2,20 +2,23 @@ import os
 from datetime import datetime, timedelta
 import mysql.connector
 import shutil
+from configparser import ConfigParser
+
+config = ConfigParser()
+config.read('./.env')
+
 
 FOLDER_NAME = datetime.now().strftime("%Y-%m-%d")
 YESTERDAY_DATE = (datetime.now() - timedelta(days=1)).strftime("%Y-%m-%d")
 
-import os
-import shutil
-import mysql.connector
+
 
 def connectToDatabase():
     return mysql.connector.connect(
-        host="localhost",
-        user="bcp_grafana",
-        password="bcp_Grafana@123",
-        database="bcp_grafana"
+        host=config.get('DATABASE', 'HOST'),
+        user=config.get('DATABASE', 'USER'),
+        password=config.get('DATABASE', 'PASSWORD'),
+        database=config.get('DATABASE', 'DATABASE'),
     )
 
 def fetchFromDatabase(sql_query):

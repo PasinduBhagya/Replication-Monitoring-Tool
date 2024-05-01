@@ -4,7 +4,12 @@ import subprocess
 import mysql.connector
 from tabulate import tabulate
 from bcpMonFileCompare import main as fileComparison
+from configparser import ConfigParser
 
+config = ConfigParser()
+config.read('./.env')
+
+jira_username = config.get('DATABASE', 'HOST')
   
 def main(arguments):
     if len(arguments) == 1:
@@ -89,10 +94,10 @@ def main(arguments):
         
 def connectToDatabase():
     return mysql.connector.connect(
-        host="localhost",
-        user="bcp_grafana",
-        password="bcp_Grafana@123",
-        database="bcp_grafana"
+        host=config.get('DATABASE', 'HOST'),
+        user=config.get('DATABASE', 'USER'),
+        password=config.get('DATABASE', 'PASSWORD'),
+        database=config.get('DATABASE', 'DATABASE'),
     )
 
 def fetchFromDatabase(sql_query):

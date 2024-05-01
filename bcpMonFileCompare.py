@@ -3,15 +3,19 @@ import subprocess
 from datetime import datetime
 import os
 import re
+from configparser import ConfigParser
+
+config = ConfigParser()
+config.read('./.env')
 
 DATE_FOLDER = datetime.now().strftime("%Y-%m-%d")
 
 def connectToDatabase():
     return mysql.connector.connect(
-        host="localhost",
-        user="bcp_grafana",
-        password="bcp_Grafana@123",
-        database="bcp_grafana"
+        host=config.get('DATABASE', 'HOST'),
+        user=config.get('DATABASE', 'USER'),
+        password=config.get('DATABASE', 'PASSWORD'),
+        database=config.get('DATABASE', 'DATABASE'),
     )
 
 def fetchFromDatabase(sql_query):
@@ -27,7 +31,7 @@ def checkExtFileAvailability(extensions, username, serverIP, serverPath):
     exensionString = ""
     for extension in extensions.split(","):
         print(f"INFO: Looking for files with {extension} extension, on {serverIP} in {serverPath} path.")
-        LINUX_COMMAND = f'''ssh {username}@{serverIP} -o ConnectTimeout=10  "cd {serverPath} && ls *.{extension}"'''
+        LINUX_COMMAND = f'''ssh {username}@{serverIP} -o ConnectTimeout={config.get('OTHER', 'SSH_TIMEOUT_VALUE')}  "cd {serverPath} && ls *.{extension}"'''
         try:
             COMMAND_OUTPUT = subprocess.check_output(LINUX_COMMAND, shell=True, stderr=subprocess.STDOUT)
             OUTPUT_AS_LIST = COMMAND_OUTPUT.decode('utf-8').split("\n")
@@ -51,7 +55,7 @@ def getLocalServerMD5Sum(localServerPath, extensions, localServerIP, localUserna
         LINUX_COMMAND = f'''ssh {localUsername}@{localServerIP}  "cd {localServerPath} && md5sum *"'''
     else:
         exensionString = checkExtFileAvailability(extensions, localUsername, localServerIP, localServerPath)
-        LINUX_COMMAND = f'''ssh {localUsername}@{localServerIP} -o ConnectTimeout=10  "cd {localServerPath} && md5sum {exensionString}"'''
+        LINUX_COMMAND = f'''ssh {localUsername}@{localServerIP} -o ConnectTimeout={config.get('OTHER', 'SSH_TIMEOUT_VALUE')}  "cd {localServerPath} && md5sum {exensionString}"'''
         
     try:
         COMMAND_OUTPUT = subprocess.check_output(LINUX_COMMAND, shell=True, stderr=subprocess.STDOUT)
