@@ -77,12 +77,11 @@ To add a new rule, enter the command bcpsyn `--add-rule` and press enter. Subseq
 
 ### 4. List all Rules
 
-To list all rules use `bcpsyn --list-rules` command and press enter. 
+To display all rules, execute the command `bcpsyn --list-rules` and press enter.
 
 ### 5. Remove a rule.
-To remove a rule enter `bcpsyn --remove-rule` command. Then provide the Rule ID that you need to remove and press enter. Then it will remove that rule.
 
-
+To remove a rule, use the command `bcpsyn --remove-rule`. Provide the Rule ID of the rule you wish to remove and press enter. This action will delete the specified rule.
 
 ## How the tool works?
 The tools use rules to check the synchronization status of the to folder reside on two diffrent servers. You can list down all the rules by using `bcpsyn --list-rules` command.
