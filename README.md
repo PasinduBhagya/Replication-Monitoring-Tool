@@ -23,3 +23,7 @@ Below is a comprehensive diagram which shows all the components of the tool.
     - CLI (Command Line Interface): Offers a user-friendly command-line interface for managing syncing rules and server pairs.
 3. **MySQL Database:** Stores syncing rules, server pair information, and synchronization status data.
 4. **Grafana Dashboard:** Visualizes stored data, providing users with intuitive insights into synchronization status and any detected discrepancies.
+
+####Inline code
+
+`$ npm install marked`
