@@ -96,5 +96,5 @@ BCP Server Path  | Absoulte path to the directory on the BCP server.
 serversID | The ID of the Servers pair which will be added using `bcpsyn --add-new-server`.
 Alias  | The name that will be visible on the Grafana Dashboard.
 
-Each rule has an ServerID which will consits of data of the Local and BCP Server. You can list the server information by using `bcpsyn --list-servers`
+Each rule includes a ServerID containing data from both the Local and BCP servers. You can view server information by using the command bcpsyn `--list-servers`.
 
