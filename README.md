@@ -109,4 +109,6 @@ BCP Server IP | IP Address of the BCP Server
 BCP Server Username | Username of the BCP Server that can be used to SSH
 Alias  | The name that will be visible on the Grafana Dashboard.
 
+Once the tool start its execution, each rule will be exectuted one at time. The tool will first log into the Local Server that is assoicated with the rule and collect md5 values. Then it will log into the BCP Server and collect md5sum values. Once this gathering is completed the analyzing part will start. the syncharoziation status will be determine by this phase. 
 
+If any mistach of the directories on the rule was identified the Synctonazation status will be set to Failed and
