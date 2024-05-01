@@ -15,8 +15,8 @@ Additionally, a command-line interface has been developed to facilitate CRUD ope
 Below is a comprehensive diagram which shows all the components of the tool.
 
 1. Local Server and BCP Server:
-  - Local Server: Responsible for initiating data synchronization to the Backup (BCP) Server.
-  - BCP Server: Acts as the destination for synchronized data.
+    - Local Server: Responsible for initiating data synchronization to the Backup (BCP) Server.
+    - BCP Server: Acts as the destination for synchronized data.
 2. Application Server:
    -   
 5. **The Application Server** - This is the server which will have the
