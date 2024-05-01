@@ -27,10 +27,6 @@ Below is a comprehensive diagram which shows all the components of the tool.
 
 ## Grafana Dashboard Overview
 
-## Installation of the tool
-
-## Database Architecture
-
 ## Configuring Monitoring with CLI
 
 To use the CLI of the tool, please use the command called `bcpsyn` with the required flags. You can list down all the possible commands by using the below commands. 
