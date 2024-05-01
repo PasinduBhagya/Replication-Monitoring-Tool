@@ -98,3 +98,15 @@ Alias  | The name that will be visible on the Grafana Dashboard.
 
 Each rule includes a ServerID containing data from both the Local and BCP servers. You can view server information by using the command bcpsyn `--list-servers`.
 
+
+Column Name  | Description
+------------- | -------------
+Servers ID  | Rule ID which will be created automaticaly.
+Project Name  | Name of the Project.
+Local Server IP  | IP Address of the Local Server 
+Local Server Username  | Username of the Local Server that can be use to SSH
+BCP Server IP | IP Address of the BCP Server
+BCP Server Username | Username of the BCP Server that can be used to SSH
+Alias  | The name that will be visible on the Grafana Dashboard.
+
+
