@@ -2,3 +2,4 @@ DATA
 SAMPLE-BCP-SCRIPTS
 .env
 .cache
+__pycache__
