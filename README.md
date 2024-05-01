@@ -29,9 +29,7 @@ Below is a comprehensive diagram which shows all the components of the tool.
 
 ## Monitoring configurations with CLI
 
-To use the CLI of the tool, please use the command called `bcpsyn` with the required flags. You can list down all the possible commands by using the below commands. 
-`bcpsyn --help`
-Below all the all possible flags comes with this tool.
+To access the command-line interface (CLI) of the tool, utilize the command "bcpsyn" along with the necessary flags. To view a comprehensive list of available commands, execute the following: `bcpsyn --help`. This command will provide a detailed overview of all available flags and their respective functionalities within the tool.
 >`--help` - Displays the help menu.
 
 > `--list-projects` - Lists all available projects along with their details.
@@ -51,29 +49,31 @@ Below all the all possible flags comes with this tool.
 > `--run-rules` - Manually runs the rules.
 
 ### 1. Add a New Server Pair.
-To add  new Server Pair please type `bcpsyn --add-new-servers` and then press enter. Then it will request for the required information. 
+To add a new server pair, please enter the following command: `bcpsyn --add-new-servers` and press enter. Subsequently, the tool will prompt you to input the necessary information for the new server pair.
 
 @ Image here
 
-Once you enter the server username and the password, it is prompt for the password of the user on the given IP Address. Once you enter the password the tool will copy its public key to that user authorized keys files to enable the key based authentication later which will be used to connect to the server.
+Upon entering the server username and password, you'll be prompted for the password of the user associated with the specified IP Address. After providing the password, the tool will copy its public key to the authorized keys file of that user. This action enables key-based authentication for future connections to the server.
+
 > [!IMPORTANT]
-> In case the above public key copy phase fail you need to manualy add the public key will be prompt by the tool after it fails.
+> If the tool encounters an issue while attempting to copy the public key during this phase, you will receive a prompt to manually add the public key as directed by the tool.
 
 > [!TIP]
-> Is always better to check whether the key based authentication is enabled with ssh <username>@<IP Address>.
+> It's advisable to verify whether key-based authentication is enabled by using the command "ssh <username>@<IP Address>"
 
-To veriy the server Pair was added you can use `bcpsyn --list-servers` command. It will list down all available servers.
+To confirm the addition of the server pair, you can use the command `bcpsyn --list-servers`. This command will display a list of all available servers.
+
 ### 2. To Remove a Server Pair.
-To remove a server please type `bcpsyn --remove-server` and press enter. Then you need to add the serverID that required to be removed. 
+To remove a server, input the command bcpsyn `--remove-server` and press enter. You will then be prompted to provide the serversID of the server you wish to remove.
 
 > [!WARNING]
-> When you remove a server pair it will remove all the Rules associated with it.
+> Removing a server pair will result in the removal of all associated rules.
 
 ### 3. Add a New Rule.
-To add a new Rule type `bcpsyn --add-rule` and then press enter. Then it will be prompt you for requesting information. 
+To add a new rule, enter the command bcpsyn `--add-rule` and press enter. Subsequently, the tool will prompt you to provide the necessary information.
 
 > [!TIP]
-> The extensions prompt is optional. If you need to check on a specific extension (Ex:- zip, txt) you can add them. If you want to check all the files, leave the prompt empty.
+> The extension prompt is optional. You can specify particular extensions (e.g., zip, txt) if needed. To check all files, simply leave the prompt empty.
 
 ### 4. List all Rules
 
