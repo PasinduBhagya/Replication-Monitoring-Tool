@@ -1,7 +1,15 @@
+#!/usr/local/bin/python3.8
 import sys
 import subprocess
 import mysql.connector
 from tabulate import tabulate
+from bcpMonFileCompare import main as fileComparison
+from configparser import ConfigParser
+
+config = ConfigParser()
+config.read('./.env')
+
+jira_username = config.get('DATABASE', 'HOST')
   
 def main(arguments):
     if len(arguments) == 1:
@@ -24,9 +32,11 @@ def main(arguments):
           
         --remove-rule-with-id\t: Remove a specific rule identified by its unique ID   
         --remove-server\t: Delete a Local BCP server pair (will remove all Rules associated with that pair)
+        
+        --run-rules\t: To manualy run the rules
         --show-logs\t: To be code     
     
-    If you need any other support, please contact Pasindu Bhagya - pasindub@codegen.net.
+    If you need any other support, please contact Pasindu Bhagya - https://github.com/PasinduBhagya/BCP-Grafana
     ''')
         exit()
 
@@ -38,7 +48,8 @@ def main(arguments):
                            "--add-new-server", 
                            "--remove-rule-with-id", 
                            "--remove-server",
-                           "--show-logs"] for element in arguments[1:]):
+                           "--show-logs",
+                           "--run-rules"] for element in arguments[1:]):
         print('''\nError: Invalid arguments provided.\n''')
         exit()
         
@@ -71,13 +82,22 @@ def main(arguments):
         
     elif arguments[1:2][0] == "--show-logs":
         print("--show-logs")
+
+    elif arguments[1:2][0] == "--run-rules":
+        print("INFO: This will execute the on all rules. Do you wish to continue? [Yes]")
+        confirmation = input("")
+        if confirmation != "Yes":
+            print("INFO: Exiting.")
+            exit(0)
+        else:
+            fileComparison()
         
 def connectToDatabase():
     return mysql.connector.connect(
-        host="localhost",
-        user="bcp_grafana",
-        password="bcp_Grafana@123",
-        database="bcp_grafana"
+        host=config.get('DATABASE', 'HOST'),
+        user=config.get('DATABASE', 'USER'),
+        password=config.get('DATABASE', 'PASSWORD'),
+        database=config.get('DATABASE', 'DATABASE'),
     )
 
 def fetchFromDatabase(sql_query):
@@ -210,8 +230,11 @@ def addNewServer():
         process = subprocess.check_output(LINUX_COMMAND, shell=True, stderr=subprocess.STDOUT)
     except:
         print(f"Error: Unable to copy the public to {localServerIP} for {localUsername}")
-        exit()
-    
+        print(f"Please copy the below Public Key of the /home/{localUsername}.ssh/authorized_keys manually of the {localServerIP}")
+        print("-"*100)
+        PubliKey = f'''ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQC0hPZhk2DqjoHNj4DIEMkjamuQvfHJvU5PXWLRBPEk3SYBVMslyS8YAdKeR9F6poLrkxr3N9PCr0oc7jPEKsFAz8AOUsv6sYO4WwHFaBxVHW7tfkU7ov+e91Wj0Msem9v202VUuZvKvZe3HrQ4Tgoua7aWwUj62+dqvBGdbILGNcxTZh9bYD0p2iTxuY4geB6WcHwI23wC5n9/lzWMd5CuX7CaAa32DRCNrtWR+Ymx7MrWkp3LA64ObaNvRNnXkvzAwj3/JhwjsBvEY2jzP4qAT7/Fg6IHL2nCQfO4qMlkhT7ihksdpLa+lfhBER5PIks3G1yZmxksfFsiY1nQ1P1h {localUsername}@localhost.localdomain'''
+        print(PubliKey)
+        print("-"*100)
     BCPServerIP = input("BCP Server IP:\t")
     BCPUsername = input("BCP Server Username:\t")
     
@@ -220,7 +243,9 @@ def addNewServer():
         process = subprocess.check_output(LINUX_COMMAND, shell=True, stderr=subprocess.STDOUT)
     except:
         print(f"Error: Unable to copy the public to {BCPServerIP} for {BCPUsername}")
-        exit()
+        print(f"Please copy the below Public Key of the /home/{localUsername}.ssh/authorized_keys manually of the {localServerIP}")
+        PubliKey = f'''ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQC0hPZhk2DqjoHNj4DIEMkjamuQvfHJvU5PXWLRBPEk3SYBVMslyS8YAdKeR9F6poLrkxr3N9PCr0oc7jPEKsFAz8AOUsv6sYO4WwHFaBxVHW7tfkU7ov+e91Wj0Msem9v202VUuZvKvZe3HrQ4Tgoua7aWwUj62+dqvBGdbILGNcxTZh9bYD0p2iTxuY4geB6WcHwI23wC5n9/lzWMd5CuX7CaAa32DRCNrtWR+Ymx7MrWkp3LA64ObaNvRNnXkvzAwj3/JhwjsBvEY2jzP4qAT7/Fg6IHL2nCQfO4qMlkhT7ihksdpLa+lfhBER5PIks3G1yZmxksfFsiY1nQ1P1h {localUsername}@localhost.localdomain'''
+        print(PubliKey)
     
     # Copy the Public Key to the BCP Server
     

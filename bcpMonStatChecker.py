@@ -2,20 +2,23 @@ import os
 from datetime import datetime, timedelta
 import mysql.connector
 import shutil
+from configparser import ConfigParser
+
+config = ConfigParser()
+config.read('./.env')
+
 
 FOLDER_NAME = datetime.now().strftime("%Y-%m-%d")
 YESTERDAY_DATE = (datetime.now() - timedelta(days=1)).strftime("%Y-%m-%d")
 
-import os
-import shutil
-import mysql.connector
+
 
 def connectToDatabase():
     return mysql.connector.connect(
-        host="localhost",
-        user="bcp_grafana",
-        password="bcp_Grafana@123",
-        database="bcp_grafana"
+        host=config.get('DATABASE', 'HOST'),
+        user=config.get('DATABASE', 'USER'),
+        password=config.get('DATABASE', 'PASSWORD'),
+        database=config.get('DATABASE', 'DATABASE'),
     )
 
 def fetchFromDatabase(sql_query):
@@ -26,8 +29,19 @@ def fetchFromDatabase(sql_query):
     database.close() 
     return output
 
+def removeTodayData(FOLDER_NAME):
+    database = connectToDatabase()
+    dbcursor = database.cursor()
+     # Remove exiting Data for the date
+    sql_query = f'''delete from statusProgress where dateTime = "{FOLDER_NAME} 00:00:00"'''
+    dbcursor.execute(sql_query)
+    database.commit()
+    dbcursor.close()
+    database.close()
+
 def addToDatabase(csvFileName):
     database = connectToDatabase()
+   
     if os.path.isfile(f"/var/lib/mysql-files/{csvFileName}"):
         os.remove(f"/var/lib/mysql-files/{csvFileName}")
     try:
@@ -39,14 +53,15 @@ def addToDatabase(csvFileName):
             FIELDS TERMINATED BY ','
             ENCLOSED BY '"'
             LINES TERMINATED BY '\n'
+            (dateTime, itemName, status, itemType)
         """
         dbcursor.execute(sql_query)
         database.commit()
         dbcursor.close()
         database.close()
         print("INFO: Importing to database is completed.")
-    except:
-        print("Error: An error occurred while copying the file.")
+    except Exception as e:
+        print("Error: An error occurred while copying the file. " + str(e))
 
 def getItemsFromDatabase(PROJECT, YESTERDAY_DATE):
     database = connectToDatabase()
@@ -72,10 +87,13 @@ def getProjectStatusFromDatabase(PROJECT):
     output = dbcursor.fetchall()
     for row in output:
         status_list_per_project.append(row[0])
-    print(f"INFO: Status of {PROJECT}" + str(status_list_per_project))
+    print(f"INFO: Status of {PROJECT} - " + str(status_list_per_project))
     if "Failed" in status_list_per_project or "No Data" in status_list_per_project:
         print(f"INFO: One or more Items has failed or has no data on {PROJECT}. Therefore overall project status set to Failed.")
         PROJECT_STATUS = "Failed"
+    elif len(status_list_per_project) == 0:
+        print(f"INFO: No Data was found for {PROJECT}. Therefore overall project status set to No Data.")
+        PROJECT_STATUS = "No Data"
     else:
         print(f"INFO: All Items are in Success state on {PROJECT}. Therefore overall project status set to Success.")
         PROJECT_STATUS = "Success"
@@ -150,7 +168,7 @@ def main():
         addToDatabase(csvFileName="ProjectStatusFile.csv")    
 
     else:
-        print( "Error: " + FOLDER_NAME + "was not found..")
+        print( "Error: " + FOLDER_NAME + " was not found..")
 
 if __name__ == "__main__":
     main()
