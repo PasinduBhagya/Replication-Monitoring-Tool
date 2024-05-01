@@ -54,35 +54,35 @@ Below all the all possible flags comes with this tool.
 
 > `--run-rules` - Manually runs the rules.
 
+### Add a New Server Pair
+To add  new Server Pair please type `bcpsyn --add-new-servers` and then press enter. Then it will request for the required information. 
+
+@ Image here
+
+Once you enter the server username and the password, it is prompt for the password of the user on the given IP Address. Once you enter the password the tool will copy its public key to that user authorized keys files to enable the key based authentication later which will be used to connect to the server.
+> [!IMPORTANT]
+> In case the above public key copy phase fail you need to manualy add the public key will be prompt by the tool after it fails.
+
+To veriy the server Pair was added you can use `bcpsyn --list-servers` command. It will list down all available servers.
+
+To remove a server please enter `bcpsyn --remove-server` and press enter. Then you need to add the serverID that required to be removed. 
+
+> [!WARNING]
+> When you remove a server pair it will remove all the Rules associated with it.
+
+## How the tool works?
+The tools use rules to check the synchronization status of the to folder reside on two diffrent servers. You can list down all the rules by using `bcpsyn --list-rules` command.
 
 
 
+Column Name  | Description
+------------- | -------------
+ID  | Rule ID which will be created automaticaly.
+Project Name  | Name of the Project.
+Local Server Path  | Absoulte path to the directory on the local server. 
+BCP Server Path  | Absoulte path to the directory on the BCP server. 
+serversID | The ID of the Servers pair which will be added using `bcpsyn --add-new-server`.
+Alias  | The name that will be visible on the Grafana Dashboard.
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+Each rule has an ServerID which will consits of data of the Local and BCP Server. You can list the server information by using `bcpsyn --list-servers`
 
