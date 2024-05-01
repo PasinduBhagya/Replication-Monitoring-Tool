@@ -1,7 +1,2 @@
 tabulate
 mysql-python-connector
-
-# Add new User
-# Change mysql-files permission
-# create privatekey if not
-
