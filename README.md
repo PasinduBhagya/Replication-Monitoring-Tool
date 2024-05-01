@@ -36,23 +36,23 @@ Below is a comprehensive diagram which shows all the components of the tool.
 To use the CLI of the tool, please use the command called `bcpsyn` with the required flags. You can list down all the possible commands by using the below commands. 
 `bcpsyn --help`
 Below all the all possible flags comes with this tool.
->`--help`
+>`--help` - Displays the help menu.
 
-> `--list-projects`
+> `--list-projects` - Lists all available projects along with their details.
 
-> `--list-rules`
+> `--list-rules` - Displays a comprehensive list of rules associated with the projects.
 
-> `--list-servers`
+> `--list-servers` - Shows all registered Local BCP server pairs.
 
-> `--add-rule`
+> `--add-rule` - Adds a new rule to specify synchronization criteria.
 
-> `--add-new-server`
+> `--add-new-server` - Registers a new Local BCP server pair.
 
-> `--remove-rule-with-id`
+> `--remove-rule-with-id` - Removes a specific rule identified by its unique ID.
 
-> `--remove-server`
+> `--remove-server` - Deletes a Local BCP server pair (will remove all rules associated with that pair).
 
-> `--run-rules`
+> `--run-rules` - Manually runs the rules.
 
 
 
