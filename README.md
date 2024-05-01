@@ -25,3 +25,7 @@ Below is a comprehensive diagram which shows all the components of the tool.
 4. **Grafana Dashboard:** Visualizes stored data, providing users with intuitive insights into synchronization status and any detected discrepancies.
 
 `$ npm install marked`
+## Grafana Dashboard Overview
+
+## Configuring Monitoring with CLI
+
