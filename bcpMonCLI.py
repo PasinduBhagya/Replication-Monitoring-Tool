@@ -5,12 +5,12 @@ import mysql.connector
 from tabulate import tabulate
 from bcpMonFileCompare import main as fileComparison
 from configparser import ConfigParser
+import os
 
 config = ConfigParser()
-config.read('./.env')
-
+config.read(os.path.dirname(os.path.abspath(__file__)) + '/.env')
 jira_username = config.get('DATABASE', 'HOST')
-  
+
 def main(arguments):
     if len(arguments) == 1:
         print("Error: To few arguments. Unable to execute. Use --help flag to see arguments.")
