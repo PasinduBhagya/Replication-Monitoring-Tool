@@ -1,4 +1,5 @@
 #!/usr/local/bin/python3.8
+
 import sys
 import subprocess
 import mysql.connector
@@ -8,8 +9,8 @@ from configparser import ConfigParser
 import os
 
 config = ConfigParser()
-config.read(os.path.dirname(os.path.abspath(__file__)) + '/.env')
-print("INFO: Base Directory on CLI Script: " + os.path.dirname(os.path.abspath(__file__)))
+config.read(os.path.abspath(__file__) + '/.env')
+print("INFO: Base Directory on CLI Script: " + os.path.abspath(__file__))
 jira_username = config.get('DATABASE', 'HOST')
 
 def main(arguments):

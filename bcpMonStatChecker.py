@@ -5,8 +5,8 @@ import shutil
 from configparser import ConfigParser
 
 config = ConfigParser()
-config.read(os.path.dirname(os.path.abspath(__file__)) + '/.env')
-print("INFO: Base Directory on Stat Checker Script: " + os.path.dirname(os.path.abspath(__file__)))
+config.read(os.path.abspath(__file__) + '/.env')
+print("INFO: Base Directory on Stat Checker Script: " + os.path.abspath(__file__))
 
 FOLDER_NAME = datetime.now().strftime("%Y-%m-%d")
 YESTERDAY_DATE = (datetime.now() - timedelta(days=1)).strftime("%Y-%m-%d")
