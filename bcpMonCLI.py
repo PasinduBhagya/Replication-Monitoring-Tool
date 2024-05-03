@@ -9,7 +9,7 @@ from configparser import ConfigParser
 import os
 
 config = ConfigParser()
-config.read('/.env')
+config.read('./.env')
 print("INFO: Base Directory on CLI Script: " + os.path.abspath(__file__))
 jira_username = config.get('DATABASE', 'HOST')
 

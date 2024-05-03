@@ -5,7 +5,7 @@ import shutil
 from configparser import ConfigParser
 
 config = ConfigParser()
-config.read('/.env')
+config.read('./.env')
 print("INFO: Base Directory on Stat Checker Script: " + os.path.abspath(__file__))
 
 FOLDER_NAME = datetime.now().strftime("%Y-%m-%d")
