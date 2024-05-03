@@ -1,16 +1,18 @@
 #!/usr/local/bin/python3.8
-
 import sys
 import subprocess
 import mysql.connector
+import os
+
 from tabulate import tabulate
 from bcpMonFileCompare import main as fileComparison
 from configparser import ConfigParser
-import os
+from bcpMonValidations import isValidDir, isValidIP, isID, isDuplicateProject
+
 
 config = ConfigParser()
 config.read('./.env')
-print("INFO: Base Directory on CLI Script: " + os.path.abspath(__file__))
+print("INFO: Base Directory on CLI Script: " + os.path.dirname(os.path.abspath("bcpMonCLI.py")))
 jira_username = config.get('DATABASE', 'HOST')
 
 def main(arguments):
@@ -113,6 +115,8 @@ def fetchFromDatabase(sql_query):
 
 def listProjects():
 
+    projectList = []
+
     sql_query = """ 
         select DISTINCT projectName from bcpServerDetails
     """
@@ -120,9 +124,12 @@ def listProjects():
         output = fetchFromDatabase(sql_query)
     
         for row in output:
-            print(row[0])
+            projectList.append(row[0])
     except:
         print("Error: Failed to Fetch Data from the database")
+        exit()
+    
+    return projectList
 
 def listRules():
     sql_query = """ 
@@ -149,18 +156,32 @@ def listServers():
         
     except:
         print("Error: Failed to Fetch Data from the database")
- 
+
+# Need validation here 
 def addRules():
     database = connectToDatabase()
     dbcursor = database.cursor()
     
     print("INFO: Provide below Information for the Rule.")
     print("-"*80)
-    listProjects()
+    print(listProjects())
     print("-"*80)
-    projectName = input("Project Name:\t")
-    localServerPath = input("Local Server Path:\t")
-    bcpServerPath = input("BCP Server Path:\t")
+    while True:
+        projectName = input("Project Name:\t")
+        projectList = listProjects()
+        if isDuplicateProject(projectName, projectList):
+            if inputValidation(projectName, FIELD_NAME="Project Name", inputType="None"):
+                break
+    
+    while True:
+        localServerPath = input("Local Server Path:\t")
+        if inputValidation(localServerPath, FIELD_NAME="Local Server Path", inputType="Dir"):
+            break
+    
+    while True:
+        bcpServerPath = input("BCP Server Path:\t")
+        if inputValidation(bcpServerPath, FIELD_NAME="BCP Server Path", inputType="Dir"):
+            break
     
     sql_query = f""" 
         select serversID, projectName, alias from bcpServerDetails where projectName = "{projectName}"
@@ -173,12 +194,21 @@ def addRules():
         headers = ["ID", "Project Name", "Alias"]
         print(tabulate(data_as_list, headers=headers, tablefmt="grid"))
     
-        serversID = input("Select Servers ID from above list:\t")
-        extensions = input("Extension Name: [Optional]\t")
+        while True:
+            serversID = input("Select Servers ID from above list:\t")
+            if inputValidation(serversID, FIELD_NAME="Server ID", inputType="ID"):
+                break
+        
+        extensions = input("Extensions Name: [Optional]\t")
+        
         if extensions == "":
             extensions = "Any"
-        alias = input("Alias:\t")
-
+        
+        while True:
+            alias = input("Alias:\t")
+            if inputValidation(alias, FIELD_NAME="Alias", inputType="None"):
+                break
+        
         sql_query = """INSERT INTO bcpSyncRules (projectName, localServerPath, bcpServerPath, serversID, extensions, alias) VALUES (%s, %s, %s, %s, %s, %s)"""
         values = (projectName, localServerPath, bcpServerPath, serversID, extensions, alias)
 
@@ -198,7 +228,8 @@ def addRules():
 
     except:
         print("Error: Adding new record is failed")
-    
+
+# Need validation here   
 def removeRuleID():
     listRules()
     database = connectToDatabase()
@@ -216,15 +247,29 @@ def removeRuleID():
         print("INFO: Rule has been removed successfully.")
     except:
         print("Error: Failed to remove Data from the database")    
-    
+
+# Need validation here    
 def addNewServer():
     database = connectToDatabase()
     dbcursor = database.cursor()
     
     print("INFO: Provide below Information for the Rule.")
-    projectName = input("Project Name:\t")    
-    localServerIP = input("Local Server IP:\t")
-    localUsername = input("Local Server Username:\t")
+    
+    while True:
+        projectName = input("Project Name:\t")
+        if inputValidation(projectName, FIELD_NAME="Project Name", inputType="None"):
+            break
+    
+    while True:
+        localServerIP = input("Local Server IP:\t")
+        if inputValidation(localServerIP, FIELD_NAME="Local Server IP", inputType="IP"):
+            break
+
+    while True:
+        localUsername = input("Local Server Username:\t")
+        if inputValidation(localUsername, FIELD_NAME="Local Server Username", inputType="None"):
+            break
+    
     print(f"INFO: Copying public Key to the {localServerIP} for {localUsername}")
     
     try:
@@ -237,8 +282,16 @@ def addNewServer():
         PubliKey = f'''ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQC0hPZhk2DqjoHNj4DIEMkjamuQvfHJvU5PXWLRBPEk3SYBVMslyS8YAdKeR9F6poLrkxr3N9PCr0oc7jPEKsFAz8AOUsv6sYO4WwHFaBxVHW7tfkU7ov+e91Wj0Msem9v202VUuZvKvZe3HrQ4Tgoua7aWwUj62+dqvBGdbILGNcxTZh9bYD0p2iTxuY4geB6WcHwI23wC5n9/lzWMd5CuX7CaAa32DRCNrtWR+Ymx7MrWkp3LA64ObaNvRNnXkvzAwj3/JhwjsBvEY2jzP4qAT7/Fg6IHL2nCQfO4qMlkhT7ihksdpLa+lfhBER5PIks3G1yZmxksfFsiY1nQ1P1h {localUsername}@localhost.localdomain'''
         print(PubliKey)
         print("-"*100)
-    BCPServerIP = input("BCP Server IP:\t")
-    BCPUsername = input("BCP Server Username:\t")
+    
+    while True:
+        BCPServerIP = input("BCP Server IP:\t",)
+        if inputValidation(BCPServerIP, FIELD_NAME="BCP Server IP", inputType="IP"):
+            break
+    
+    while True:
+        BCPUsername = input("BCP Server Username:\t")
+        if inputValidation(BCPUsername, FIELD_NAME="BCP Server Username", inputType="None"):
+            break    
     
     try:
         LINUX_COMMAND = f'''ssh-copy-id {BCPUsername}@{BCPServerIP}'''
@@ -251,7 +304,10 @@ def addNewServer():
     
     # Copy the Public Key to the BCP Server
     
-    alias = input("Alias:\t")
+    while True:
+        alias = input("Alias:\t")
+        if inputValidation(alias, FIELD_NAME="Alias", inputType="None"):
+            break  
 
     sql_query = """INSERT INTO bcpServerDetails (projectName, localServerIP, localUsername, BCPServerIP, BCPUsername, alias) VALUES (%s, %s, %s, %s, %s, %s)"""
     values = (projectName, localServerIP, localUsername, BCPServerIP, BCPUsername, alias)
@@ -273,6 +329,7 @@ def addNewServer():
     except:
         print("Error: Failed to Fetch Data from the database")
 
+# Need validation here
 def removServer():
     listServers()
     removeServerID = input("Servers ID:\t")
@@ -314,7 +371,36 @@ def removServer():
         print("INFO: Server has been removed successfully.")
     else:
         print("INFO: Server was not removed")
-   
+
+def inputValidation(STRING_TO_CHECK, FIELD_NAME, inputType):
+    if not STRING_TO_CHECK.strip():
+        print(f"Error: {FIELD_NAME} is required.")
+        return False
+    else:
+        if inputType == "Dir":
+            if isValidDir(STRING_TO_CHECK.strip()):
+                return True
+            else:
+                print(f"Error: {STRING_TO_CHECK.strip()} is not a valid directory.")
+                return False
+
+        if inputType == "IP":
+            if isValidIP(STRING_TO_CHECK.strip()):
+                return True
+            else:
+                print(f"Error: {STRING_TO_CHECK.strip()} is not a valid IP Address")
+                return False
+            
+        if inputType == "ID":
+            if isID(STRING_TO_CHECK.strip()):
+                return True
+            else:
+                print(f"Error: ID should be an Interger")
+                return False
+            
+        if inputType == "None":
+            return True
+
 if __name__ == "__main__":
     main(sys.argv)
 
