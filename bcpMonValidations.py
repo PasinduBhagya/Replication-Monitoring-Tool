@@ -1,4 +1,5 @@
 import re
+import os
 
 def isValidDir(STRING_TO_CHECK):
     dir_pattern = r'^/[a-zA-Z0-9_/\\.-]*$'
@@ -23,3 +24,11 @@ def isDuplicateProject(projectName, projectList):
         return False
     else:
         return True
+
+def getABSPath():
+    current_directory = os.getcwd()
+    print("here")
+    # Join the current directory path with the relative path of the file
+    file_path = os.path.abspath(os.path.join(current_directory, "bcpMonValidations.py"))
+    
+    print("Absolute path of bcpMonValidations.py:", file_path)

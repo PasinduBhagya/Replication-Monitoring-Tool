@@ -5,13 +5,10 @@ import shutil
 from configparser import ConfigParser
 
 config = ConfigParser()
-config.read('./.env')
-print("INFO: Base Directory on Stat Checker Script: " + os.path.abspath(__file__))
+config.read(os.path.dirname(os.path.realpath(os.path.dirname(__file__) + "/bcpsyn")) + "/.env")
 
 FOLDER_NAME = datetime.now().strftime("%Y-%m-%d")
 YESTERDAY_DATE = (datetime.now() - timedelta(days=1)).strftime("%Y-%m-%d")
-
-
 
 def connectToDatabase():
     return mysql.connector.connect(

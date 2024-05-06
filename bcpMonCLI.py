@@ -9,10 +9,9 @@ from bcpMonFileCompare import main as fileComparison
 from configparser import ConfigParser
 from bcpMonValidations import isValidDir, isValidIP, isID, isDuplicateProject
 
-
 config = ConfigParser()
-config.read('./.env')
-print("INFO: Base Directory on CLI Script: " + os.path.dirname(os.path.abspath("bcpMonCLI.py")))
+config.read(os.path.dirname(os.path.realpath(os.path.dirname(__file__) + "/bcpsyn")) + "/.env")
+
 jira_username = config.get('DATABASE', 'HOST')
 
 def main(arguments):

@@ -6,7 +6,7 @@ import re
 from configparser import ConfigParser
 
 config = ConfigParser()
-config.read('./.env')
+config.read(os.path.dirname(os.path.realpath(os.path.dirname(__file__) + "/bcpsyn")) + "/.env")
 
 DATE_FOLDER = datetime.now().strftime("%Y-%m-%d")
 
