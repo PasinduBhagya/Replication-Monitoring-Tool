@@ -3,3 +3,4 @@ SAMPLE-BCP-SCRIPTS
 .env
 .cache
 __pycache__
+test.py
