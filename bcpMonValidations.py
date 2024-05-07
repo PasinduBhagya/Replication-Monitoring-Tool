@@ -17,8 +17,9 @@ def isValidIP(STRING_TO_CHECK):
 def isID(STRING_TO_CHECK):
     return STRING_TO_CHECK.isdigit()
 
-def isDuplicateProject(projectName, projectList):
+def isValidProject(projectName, projectList):
     if projectName not in projectList:
+        print("Error: Please select a from the Project List")
         return False
     else:
         return True

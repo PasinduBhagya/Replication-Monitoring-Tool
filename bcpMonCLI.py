@@ -7,7 +7,7 @@ import os
 from tabulate import tabulate
 from bcpMonFileCompare import main as fileComparison
 from configparser import ConfigParser
-from bcpMonValidations import isValidDir, isValidIP, isID, isDuplicateProject, isValidTime
+from bcpMonValidations import isValidDir, isValidIP, isID, isValidProject, isValidTime
 
 config = ConfigParser()
 baseDIR = os.path.dirname(os.path.realpath(os.path.dirname(__file__) + "/bcpsyn"))
@@ -91,7 +91,7 @@ def main(arguments):
         print("INFO: This will execute the on all rules. Do you wish to continue? [Yes]")
         confirmation = input("")
         if confirmation != "Yes":
-            print("INFO: Exiting.")
+            print("INFO: The Programm is exiting.")
             exit(0)
         else:
             fileComparison()
@@ -169,11 +169,9 @@ def addRules():
     while True:
         projectName = input("Project Name:\t")
         projectList = listProjects()
-        if isDuplicateProject(projectName, projectList):
+        if isValidProject(projectName, projectList):
             if inputValidation(projectName, FIELD_NAME="Project Name", inputType="None"):
                 break
-            else:
-                print("Error: Please select a from the Project List")
     
     while True:
         localServerPath = input("Local Server Path:\t")
