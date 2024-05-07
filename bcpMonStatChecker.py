@@ -5,7 +5,8 @@ import shutil
 from configparser import ConfigParser
 
 config = ConfigParser()
-config.read(os.path.dirname(os.path.realpath(os.path.dirname(__file__) + "/bcpsyn")) + "/.env")
+baseDIR = os.path.dirname(os.path.realpath(os.path.dirname(__file__) + "/bcpsyn"))
+config.read(baseDIR + "/.env")
 
 FOLDER_NAME = datetime.now().strftime("%Y-%m-%d")
 YESTERDAY_DATE = (datetime.now() - timedelta(days=1)).strftime("%Y-%m-%d")

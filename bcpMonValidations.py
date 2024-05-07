@@ -1,5 +1,4 @@
 import re
-import os
 
 def isValidDir(STRING_TO_CHECK):
     dir_pattern = r'^/[a-zA-Z0-9_/\\.-]*$'
@@ -20,7 +19,13 @@ def isID(STRING_TO_CHECK):
 
 def isDuplicateProject(projectName, projectList):
     if projectName not in projectList:
-        print("Error: Please select a from the Project List")
         return False
     else:
         return True
+
+def isValidTime(STRING_TO_CHECK):
+    timeRegExpress = r'^(?:[01]\d|2[0-3]):(?:[0-5]\d)$'
+    if re.match(timeRegExpress, STRING_TO_CHECK):
+        return True
+    else:
+        return False

@@ -6,7 +6,8 @@ import re
 from configparser import ConfigParser
 
 config = ConfigParser()
-config.read(os.path.dirname(os.path.realpath(os.path.dirname(__file__) + "/bcpsyn")) + "/.env")
+baseDIR = os.path.dirname(os.path.realpath(os.path.dirname(__file__) + "/bcpsyn"))
+config.read(baseDIR + "/.env")
 
 DATE_FOLDER = datetime.now().strftime("%Y-%m-%d")
 
@@ -137,19 +138,23 @@ def getRuleID():
     
     checkedRulesList = []
 
-    if not os.path.isfile(f".cache/{DATE_FOLDER}_checkedRules"):
-        with open(f".cache/{DATE_FOLDER}_checkedRules", 'a+') as cachedFile:
+    if not os.path.isfile(f"{baseDIR}/.cache/{DATE_FOLDER}_checkedRules"):
+        with open(f"{baseDIR}.cache/{DATE_FOLDER}_checkedRules", 'a+') as cachedFile:
             pass
     if not os.path.exists(f"DATA/{DATE_FOLDER}"):
         os.makedirs(f"DATA/{DATE_FOLDER}")
 
-    with open(f".cache/{DATE_FOLDER}_checkedRules", 'r') as checkedRules:
+    with open(f"{baseDIR}/.cache/{DATE_FOLDER}_checkedRules", 'r') as checkedRules:
         for checkedRule in checkedRules:
             checkedRulesList.append(int(checkedRule.strip()))
     
-    sql_query = """ 
-        select * from bcpSyncRules
-    """
+    # Get the schedule time which are within current time fram
+    # sql_query = """ 
+    #     select * from bcpSyncRules
+    # """
+
+    sql_query = """SELECT * FROM bcpSyncRules WHERE scheduledTime > DATE_FORMAT(NOW() - INTERVAL 15 MINUTE, '%H:%i') AND scheduledTime <= DATE_FORMAT(NOW(), '%H:%i')"""
+
     rulesInfo = fetchFromDatabase(sql_query)
     
     for ruleInfo in rulesInfo:
