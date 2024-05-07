@@ -7,10 +7,11 @@ import os
 from tabulate import tabulate
 from bcpMonFileCompare import main as fileComparison
 from configparser import ConfigParser
-from bcpMonValidations import isValidDir, isValidIP, isID, isDuplicateProject
+from bcpMonValidations import isValidDir, isValidIP, isID, isDuplicateProject, isValidTime
 
 config = ConfigParser()
-config.read(os.path.dirname(os.path.realpath(os.path.dirname(__file__) + "/bcpsyn")) + "/.env")
+baseDIR = os.path.dirname(os.path.realpath(os.path.dirname(__file__) + "/bcpsyn"))
+config.read(baseDIR + "/.env")
 
 jira_username = config.get('DATABASE', 'HOST')
 
@@ -171,6 +172,8 @@ def addRules():
         if isDuplicateProject(projectName, projectList):
             if inputValidation(projectName, FIELD_NAME="Project Name", inputType="None"):
                 break
+            else:
+                print("Error: Please select a from the Project List")
     
     while True:
         localServerPath = input("Local Server Path:\t")
@@ -204,12 +207,17 @@ def addRules():
             extensions = "Any"
         
         while True:
+            scheduledTime = input("Executing Time [In 24 hour Format]:\t")
+            if inputValidation(scheduledTime, FIELD_NAME="Executing Time", inputType="Time"):
+                break
+        
+        while True:
             alias = input("Alias:\t")
             if inputValidation(alias, FIELD_NAME="Alias", inputType="None"):
                 break
         
-        sql_query = """INSERT INTO bcpSyncRules (projectName, localServerPath, bcpServerPath, serversID, extensions, alias) VALUES (%s, %s, %s, %s, %s, %s)"""
-        values = (projectName, localServerPath, bcpServerPath, serversID, extensions, alias)
+        sql_query = """INSERT INTO bcpSyncRules (projectName, localServerPath, bcpServerPath, serversID, extensions, scheduledTime, alias) VALUES (%s, %s, %s, %s, %s, %s, %s)"""
+        values = (projectName, localServerPath, bcpServerPath, serversID, extensions, scheduledTime, alias)
 
         dbcursor.execute(sql_query, values)
         database.commit()
@@ -225,8 +233,8 @@ def addRules():
         print(tabulate(data_as_list, headers=headers, tablefmt="grid"))
         print("INFO: Rule added successfully.")
 
-    except:
-        print("Error: Adding new record is failed")
+    except Exception as e:
+        print("Error: Adding new record is failed" + e)
 
 # Need validation here   
 def removeRuleID():
@@ -301,7 +309,7 @@ def addNewServer():
         process = subprocess.check_output(LINUX_COMMAND, shell=True, stderr=subprocess.STDOUT)
     except:
         print(f"Error: Unable to copy the public to {BCPServerIP} for {BCPUsername}")
-        print(f"Please copy the below Public Key of the /home/{localUsername}.ssh/authorized_keys manually of the {localServerIP}")
+        print(f"Please copy the below Public Key of the /home/{BCPUsername}.ssh/authorized_keys manually of the {BCPServerIP}")
         PubliKey = f'''ssh-rsa {KeyValue} {localUsername}@{config.get('OTHER', 'HOSTNAME')}'''
         print(PubliKey)
     
@@ -399,6 +407,12 @@ def inputValidation(STRING_TO_CHECK, FIELD_NAME, inputType):
                 return True
             else:
                 print(f"Error: ID should be an Interger")
+                return False
+        if inputType == "Time":
+            if isValidTime(STRING_TO_CHECK.strip()):
+                return True
+            else:
+                print(f"Error: {FIELD_NAME} is in incorrect format. Corrent Format - 23:45")
                 return False
             
         if inputType == "None":
