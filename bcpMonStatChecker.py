@@ -61,6 +61,7 @@ def addToDatabase(csvFileName):
     except Exception as e:
         print("Error: An error occurred while copying the file. " + str(e))
 
+# Test
 def getItemsFromDatabase(PROJECT, YESTERDAY_DATE):
     database = connectToDatabase()
     item_list_per_project = []
