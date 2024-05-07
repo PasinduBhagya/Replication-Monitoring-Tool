@@ -138,7 +138,7 @@ def listRules():
     try:
         output = fetchFromDatabase(sql_query)
         data_as_list = [list(item) for item in output]
-        headers = ["ID", "Project Name", "Local Server Path", "BCP Server Path", "serversID", "Extensions", "Alias"]
+        headers = ["ID", "Project Name", "Local Server Path", "BCP Server Path", "serversID", "Extensions", "Alias", "Scheduled Time"]
         print(tabulate(data_as_list, headers=headers, tablefmt="grid"))
     except:
         print("Error: Failed to Fetch Data from the database")
