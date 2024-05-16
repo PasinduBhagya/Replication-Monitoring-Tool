@@ -1,4 +1,7 @@
 import re
+from datetime import datetime
+
+LogTime = datetime.today().strftime('%Y-%m-%d %H:%M:%S')
 
 def isValidDir(STRING_TO_CHECK):
     dir_pattern = r'^/[a-zA-Z0-9_/\\.-]*$'
@@ -19,7 +22,7 @@ def isID(STRING_TO_CHECK):
 
 def isValidProject(projectName, projectList):
     if projectName not in projectList:
-        print("Error: Please select a from the Project List")
+        print(f"{LogTime} Error: Please select a from the Project List")
         return False
     else:
         return True

@@ -52,7 +52,8 @@ def getLocalServerMD5Sum(localServerPath, extensions, localServerIP, localUserna
     
     LOCAL_MD5SUM_HASH = {}
     if extensions == "Any":
-        LINUX_COMMAND = f'''ssh {localUsername}@{localServerIP}  "cd {localServerPath} && md5sum *"'''
+        findCommand = "find . -maxdepth 1 -type f -exec md5sum {} \;"
+        LINUX_COMMAND = f'''ssh {localUsername}@{localServerIP}  "cd {localServerPath} && {findCommand}"'''
     else:
         exensionString = checkExtFileAvailability(extensions, localUsername, localServerIP, localServerPath)
         LINUX_COMMAND = f'''ssh {localUsername}@{localServerIP} -o ConnectTimeout={config.get('OTHER', 'SSH_TIMEOUT_VALUE')}  "cd {localServerPath} && md5sum {exensionString}"'''
@@ -66,21 +67,19 @@ def getLocalServerMD5Sum(localServerPath, extensions, localServerIP, localUserna
         
         OUTPUT_AS_LIST = list(filter(bool, OUTPUT_AS_LIST))
 
-        for resultLine in OUTPUT_AS_LIST: # 231edf7e334e7135e02832744d2d65b9  bcpMonStatChecker.py
+        for resultLine in OUTPUT_AS_LIST:
             
             try:
                 values = resultLine.split()
                 key = values[1]
                 value = values[0]
-                # To check whether the return value is MD5sum
+
                 md5_regex = r"^[a-fA-F0-9]{32}$"
                 if bool(re.match(md5_regex, value)):
                     LOCAL_MD5SUM_HASH[key] = value
 
             except:
                 print("Warning: Invalid output recived from the server: " + resultLine)
-
-            
         
         return LOCAL_MD5SUM_HASH
         
@@ -94,7 +93,8 @@ def getBCPServerMD5Sum(bcpServerPath, extensions, BCPServerIP, BCPUsername, proj
     
     BCP_MD5SUM_HASH = {}
     if extensions == "Any":
-        LINUX_COMMAND = f'''ssh {BCPUsername}@{BCPServerIP}  "cd {bcpServerPath} && md5sum *"'''
+        findCommand = "find . -maxdepth 1 -type f -exec md5sum {} \;"
+        LINUX_COMMAND = f'''ssh {BCPUsername}@{BCPServerIP}  "cd {bcpServerPath} && {findCommand}"'''
     else:
         exensionString = checkExtFileAvailability(extensions, BCPUsername, BCPServerIP, bcpServerPath)
         LINUX_COMMAND = f'''ssh {BCPUsername}@{BCPServerIP} -o ConnectTimeout=10  "cd {bcpServerPath} && md5sum {exensionString}"'''
@@ -137,20 +137,20 @@ def getRuleID():
     
     checkedRulesList = []
 
-    if not os.path.isfile(f"{baseDIR}/.cache/{DATE_FOLDER}_checkedRules"):
-        with open(f"{baseDIR}.cache/{DATE_FOLDER}_checkedRules", 'a+') as cachedFile:
+    if not os.path.isfile(f"./.cache/{DATE_FOLDER}_checkedRules"):
+        with open(f"./.cache/{DATE_FOLDER}_checkedRules", 'a+') as cachedFile:
             pass
     if not os.path.exists(f"DATA/{DATE_FOLDER}"):
         os.makedirs(f"DATA/{DATE_FOLDER}")
 
-    with open(f"{baseDIR}/.cache/{DATE_FOLDER}_checkedRules", 'r') as checkedRules:
+    with open(f"./.cache/{DATE_FOLDER}_checkedRules", 'r') as checkedRules:
         for checkedRule in checkedRules:
             checkedRulesList.append(int(checkedRule.strip()))
     
     # Get the schedule time which are within current time fram
-    # sql_query = """ 
-    #     select * from bcpSyncRules
-    # """
+    #sql_query = """ 
+    #     	select * from bcpSyncRules
+    # 		"""
 
     sql_query = """SELECT * FROM bcpSyncRules WHERE scheduledTime > DATE_FORMAT(NOW() - INTERVAL 15 MINUTE, '%H:%i') AND scheduledTime <= DATE_FORMAT(NOW(), '%H:%i')"""
 
