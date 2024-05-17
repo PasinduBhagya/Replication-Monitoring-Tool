@@ -9,6 +9,7 @@ config = ConfigParser()
 config.read("./.env")
 
 DATE_FOLDER = datetime.now().strftime("%Y-%m-%d")
+exeTime = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
 
 def connectToDatabase():
     return mysql.connector.connect(
@@ -30,7 +31,7 @@ def fetchFromDatabase(sql_query):
 def checkExtFileAvailability(extensions, username, serverIP, serverPath):
     exensionString = ""
     for extension in extensions.split(","):
-        print(f"INFO: Looking for files with {extension} extension, on {serverIP} in {serverPath} path.")
+        print(f"INFO: {exeTime}Looking for files with {extension} extension, on {serverIP} in {serverPath} path.")
         LINUX_COMMAND = f'''ssh {username}@{serverIP} -o ConnectTimeout={config.get('OTHER', 'SSH_TIMEOUT_VALUE')}  "cd {serverPath} && ls *.{extension}"'''
         try:
             COMMAND_OUTPUT = subprocess.check_output(LINUX_COMMAND, shell=True, stderr=subprocess.STDOUT)
@@ -41,12 +42,12 @@ def checkExtFileAvailability(extensions, username, serverIP, serverPath):
         
         except subprocess.CalledProcessError as e:
             if e.returncode == 2:
-                print(f"Warning: No files found with {extension} extension, on {serverIP} in {serverPath} path.")
+                print(f"Warnin{exeTime}g: No files found with {extension} extension, on {serverIP} in {serverPath} path.")
             else:
-                print(f"Error: Failed to execute the listing Command on {serverIP} server.")
+                print(f"Error:{exeTime} Failed to execute the listing Command on {serverIP} server.")
 
         except subprocess.TimeoutExpired:
-            print(f"Error: Connection to {serverIP} timed out. Please check your network connection and try again.")
+            print(f"Error:{exeTime} Connection to {serverIP} timed out. Please check your network connection and try again.")
 
 def getLocalServerMD5Sum(localServerPath, extensions, localServerIP, localUsername, projectName):
     
@@ -61,7 +62,7 @@ def getLocalServerMD5Sum(localServerPath, extensions, localServerIP, localUserna
     try:
         COMMAND_OUTPUT = subprocess.check_output(LINUX_COMMAND, shell=True, stderr=subprocess.STDOUT)
 
-        print(f"INFO: Gathering MD5SUM - Project({projectName}) - IP({localServerIP}) - Path({localServerPath})")
+        print(f"INFO: {exeTime}Gathering MD5SUM - Project({projectName}) - IP({localServerIP}) - Path({localServerPath})")
                 
         OUTPUT_AS_LIST = COMMAND_OUTPUT.decode('utf-8').split("\n")
         
@@ -79,15 +80,17 @@ def getLocalServerMD5Sum(localServerPath, extensions, localServerIP, localUserna
                     LOCAL_MD5SUM_HASH[key] = value
 
             except:
-                print("Warning: Invalid output recived from the server: " + resultLine)
+                print(f"Warning {exeTime}: Invalid output recived from the server: " + resultLine)
+
+            
         
         return LOCAL_MD5SUM_HASH
         
     except subprocess.CalledProcessError as e:
-        print(f"Error executing command: {e}")
+        print(f"Error {exeTime}executing command: {e}")
     
     except subprocess.TimeoutExpired:
-            print(f"Error: Connection to {localServerIP} timed out. Please check your network connection and try again.")
+            print(f"Error:{exeTime} Connection to {localServerIP} timed out. Please check your network connection and try again.")
 
 def getBCPServerMD5Sum(bcpServerPath, extensions, BCPServerIP, BCPUsername, projectName):
     
@@ -102,7 +105,7 @@ def getBCPServerMD5Sum(bcpServerPath, extensions, BCPServerIP, BCPUsername, proj
     try:
         COMMAND_OUTPUT = subprocess.check_output(LINUX_COMMAND, shell=True, stderr=subprocess.STDOUT)
 
-        print(f"INFO: Gathering - Project({projectName}) - IP({BCPServerIP}) - Path({bcpServerPath})")
+        print(f"INFO: {exeTime}Gathering - Project({projectName}) - IP({BCPServerIP}) - Path({bcpServerPath})")
                     
         OUTPUT_AS_LIST = COMMAND_OUTPUT.decode('utf-8').split("\n")
         
@@ -121,15 +124,15 @@ def getBCPServerMD5Sum(bcpServerPath, extensions, BCPServerIP, BCPUsername, proj
                     BCP_MD5SUM_HASH[key] = value
 
             except:
-                print("Warning: Invalid output recived from the server: " + resultLine)
+                print(f"Warning{exeTime}: Invalid output recived from the server: " + resultLine)
         
         return BCP_MD5SUM_HASH
         
     except subprocess.CalledProcessError as e:
-        print(f"Error: Information gathering command executing is failed {e}")
+        print(f"Error:{exeTime} Information gathering command executing is failed {e}")
     
     except subprocess.TimeoutExpired:
-            print(f"Error: Connection to {BCPServerIP} timed out. Please check your network connection and try again.")
+            print(f"Error:{exeTime} Connection to {BCPServerIP} timed out. Please check your network connection and try again.")
 
 def getRuleID():
     
@@ -158,10 +161,10 @@ def getRuleID():
     
     for ruleInfo in rulesInfo:
         print("-"*90)
-        print("INFO: Starting rule ID - " + str(ruleInfo[0]) + " " + str(ruleInfo[-1]))
+        print(f"INFO: {exeTime} Starting rule ID - " + str(ruleInfo[0]) + " " + str(ruleInfo[-1]))
         
         if int(ruleInfo[0]) in checkedRulesList:
-            print(f"INFO: Skipping rule ID - {ruleInfo[0]}.")
+            print(f"INFO: {exeTime} Skipping rule ID - {ruleInfo[0]}.")
 
         else:
             projectName = ruleInfo[1]
@@ -174,7 +177,7 @@ def getRuleID():
             extensions = ruleInfo[5]
             alias = ruleInfo[6]
             
-            print("INFO: Servers ID - " + str(ruleInfo[4]))
+            print(f"INFO: {exeTime} Servers ID - " + str(ruleInfo[4]))
             
             sql_query = f""" 
                 select * from bcpServerDetails where serversID = "{serversID}"
@@ -192,28 +195,28 @@ def getRuleID():
                 for key, value in LOCAL_MD5SUM_HASH.items():
                     if key in BCP_MD5SUM_HASH:
                         if value == BCP_MD5SUM_HASH[key]:
-                            print(f"INFO: File {key} is same on the both servers.")
+                            print(f"INFO: {exeTime} File {key} is same on the both servers.")
                         else:
-                            print(f"Warning: File {key} is not same on the both servers.")
+                            print(f"Warning: {exeTime} File {key} is not same on the both servers.")
                             SYNC_STATUS = "Failed"        
                     else:
-                        print(f"Warning: File {key} was not found in BCP Enviorment.")
+                        print(f"Warning: {exeTime} File {key} was not found in BCP Enviorment.")
                         SYNC_STATUS = "Failed"
                 
                 if not os.path.exists("DATA/" + DATE_FOLDER):
                     try:
                         os.makedirs("DATA/" + DATE_FOLDER)
-                        print(f"INFO: {DATE_FOLDER} folder has been created successfully.")
+                        print(f"INFO: {exeTime} {DATE_FOLDER} folder has been created successfully.")
                     except:
-                        print("Error: Unable to create the DATA/" + DATE_FOLDER)
+                        print(f"Error: {exeTime} Unable to create the DATA/" + DATE_FOLDER)
                     
                 with open("DATA/" + DATE_FOLDER + "/" +  projectName, 'a') as projectFile:
                     projectFile.write(f"{alias},{SYNC_STATUS}\n")
                 with open(f".cache/{DATE_FOLDER}_checkedRules", 'a') as checkedRules:
                     checkedRules.write(str(ruleInfo[0]) + "\n")
             except:
-                print("Error: The server did not return data for given extensions.") 
-            print("-"*90)    
+                print("Error: {exeTime} The server did not return data for given extensions.") 
+            print("-"*90)   
 
         
 def main():

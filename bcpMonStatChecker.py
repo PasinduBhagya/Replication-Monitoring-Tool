@@ -9,6 +9,7 @@ baseDIR = os.path.dirname(os.path.realpath(os.path.dirname(__file__) + "/bcpsyn"
 config.read("./.env")
 
 FOLDER_NAME = datetime.now().strftime("%Y-%m-%d")
+exeTime = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
 YESTERDAY_DATE = (datetime.now() - timedelta(days=1)).strftime("%Y-%m-%d")
 LogTime = datetime.today().strftime('%Y-%m-%d %H:%M:%S')
 
@@ -58,9 +59,9 @@ def addToDatabase(csvFileName):
         database.commit()
         dbcursor.close()
         database.close()
-        print("INFO: Importing to database is completed.")
+        print(f"INFO: {exeTime} Importing to database is completed.")
     except Exception as e:
-        print("Error: An error occurred while copying the file. " + str(e))
+        print(f"Error: {exeTime} An error occurred while copying the file. " + str(e))
 
 def getItemsFromDatabase(PROJECT, YESTERDAY_DATE):
     database = connectToDatabase()
@@ -86,16 +87,17 @@ def getProjectStatusFromDatabase(PROJECT):
     output = dbcursor.fetchall()
     for row in output:
         status_list_per_project.append(row[0])
-    print(f"{LogTime} INFO: Status of {PROJECT} - " + str(status_list_per_project))
+    print(f"INFO: {exeTime} Status of {PROJECT} - " + str(status_list_per_project))
     if "Failed" in status_list_per_project or "No Data" in status_list_per_project:
-        print(f"{LogTime} INFO: One or more Items has failed or has no data on {PROJECT}. Therefore overall project status set to Failed.")
+        print(f"INFO: {exeTime} One or more Items has failed or has no data on {PROJECT}. Therefore overall project status set to Failed.")
         PROJECT_STATUS = "Failed"
     elif len(status_list_per_project) == 0:
-        print(f"{LogTime} INFO: No Data was found for {PROJECT}. Therefore overall project status set to No Data.")
+        print(f"INFO: {exeTime} No Data was found for {PROJECT}. Therefore overall project status set to No Data.")
         PROJECT_STATUS = "No Data"
     else:
-        print(f"{LogTime} INFO: All Items are in Success state on {PROJECT}. Therefore overall project status set to Success.")
+        print(f"INFO: {exeTime} All Items are in Success state on {PROJECT}. Therefore overall project status set to Success.")
         PROJECT_STATUS = "Success"
+    
     return PROJECT_STATUS 
    
 
@@ -111,7 +113,7 @@ def main():
         # Project Names
         SYC_RESULTS_FILES = os.listdir("DATA/" + FOLDER_NAME) # Get the Date with the Folder name
         
-        print("INFO: Listing Project Names " + str(SYC_RESULTS_FILES))
+        print(f"INFO: {exeTime} Listing Project Names " + str(SYC_RESULTS_FILES))
 
         for PROJECT in SYC_RESULTS_FILES:
             print("-"*100)
@@ -167,7 +169,7 @@ def main():
         addToDatabase(csvFileName="ProjectStatusFile.csv")    
 
     else:
-        print( "Error: " + FOLDER_NAME + " was not found..")
+        print( f"Error: {exeTime}" + FOLDER_NAME + " was not found..")
 
 if __name__ == "__main__":
     main()
