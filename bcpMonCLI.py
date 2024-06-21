@@ -7,13 +7,12 @@ import os
 from tabulate import tabulate
 from bcpMonFileCompare import main as fileComparison
 from configparser import ConfigParser
-from bcpMonValidations import isValidDir, isValidIP, isID, isValidProject, isValidTime
+from bcpMonValidations import isValidDir, isValidIP, isID, isValidProject, isValidTime, isValidServerID
 
 config = ConfigParser()
-baseDIR = os.path.dirname(os.path.realpath(os.path.dirname(__file__) + "/bcpsyn"))
-config.read(baseDIR + "/.env")
-
-jira_username = config.get('DATABASE', 'HOST')
+# baseDIR = os.path.dirname(os.path.realpath(os.path.dirname(__file__) + "/bcpsyn"))
+# config.read(baseDIR + "/.env")
+config.read("./.env")
 
 def main(arguments):
     if len(arguments) == 1:
@@ -37,6 +36,9 @@ def main(arguments):
         --remove-rule-with-id\t: Remove a specific rule identified by its unique ID   
         --remove-server\t: Delete a Local BCP server pair (will remove all Rules associated with that pair)
         
+        --update-rule\t: To update an existing Rule
+        --update-server\t: To update an existing Server information
+        
         --run-rules\t: To manualy run the rules
         --show-logs\t: To be code     
     
@@ -53,7 +55,9 @@ def main(arguments):
                            "--remove-rule-with-id", 
                            "--remove-server",
                            "--show-logs",
-                           "--run-rules"] for element in arguments[1:]):
+                           "--run-rules",
+                           "--update-rule",
+                           "--update-server"] for element in arguments[1:]):
         print('''\nError: Invalid arguments provided.\n''')
         exit()
         
@@ -86,6 +90,12 @@ def main(arguments):
         
     elif arguments[1:2][0] == "--show-logs":
         print("--show-logs")
+    
+    elif arguments[1:2][0] == "--update-rule":
+        updateRule()
+        
+    elif arguments[1:2][0] == "--update-server":
+        updateServer()
 
     elif arguments[1:2][0] == "--run-rules":
         print("INFO: This will execute the on all rules. Do you wish to continue? [Yes]")
@@ -124,9 +134,10 @@ def listProjects():
         output = fetchFromDatabase(sql_query)
     
         for row in output:
-            projectList.append(row[0])
-    except:
-        print("Error: Failed to Fetch Data from the database")
+            print(row[0])
+
+    except Exception as e:
+        print("Error: Failed to Fetch Data from the database\n" + str(e))
         exit()
     
     return projectList
@@ -140,10 +151,13 @@ def listRules():
         data_as_list = [list(item) for item in output]
         headers = ["ID", "Project Name", "Local Server Path", "BCP Server Path", "serversID", "Extensions", "Alias", "Scheduled Time"]
         print(tabulate(data_as_list, headers=headers, tablefmt="grid"))
+        
+        return output
     except:
         print("Error: Failed to Fetch Data from the database")
 
 def listServers():
+
     sql_query = """ 
         select * from bcpServerDetails
     """
@@ -154,10 +168,11 @@ def listServers():
         headers = ["Servers ID", "Project Name", "Local Server IP", "Local Server Username", "BCP Server IP", "BCP Server Username", "Alias"]
         print(tabulate(data_as_list, headers=headers, tablefmt="grid"))
         
-    except:
-        print("Error: Failed to Fetch Data from the database")
-
-# Need validation here 
+        return output
+        
+    except Exception as e:
+        print("Error: Failed to Fetch Data from the database" + str(e))
+              
 def addRules():
     database = connectToDatabase()
     dbcursor = database.cursor()
@@ -381,7 +396,77 @@ def removServer():
     else:
         print("INFO: Server was not removed")
 
-def inputValidation(STRING_TO_CHECK, FIELD_NAME, inputType):
+def updateServer():
+    serverIDList = []
+    def updateDetails(columnName, newValue, serverID):
+        SQL_QUERY = f'''update bcpServerDetails set {columnName}="{newValue}" where serversID={serverID}'''
+        try:
+            database = connectToDatabase()
+            dbcursor = database.cursor()
+            dbcursor.execute(SQL_QUERY)
+            database.commit()
+        except Exception as e:
+            print("Error: Failed to Fetch Data from the database\t" + str(e))
+    
+    print("Enter the Server ID you want to update")
+    serverList = listServers()
+    
+    for row in serverList:
+            serverIDList.append(row[0])
+           
+    while True:
+        updateServerID = input("Server ID to Update:\t")
+        if inputValidation(updateServerID, "Server ID", "UpdateSID", serverIDList):
+            break
+    
+    for serverRow in serverList:
+        if serverRow[0] == int(updateServerID):
+            serverDetails = list(serverRow)
+    
+    for i, data in enumerate(serverDetails[1:]):
+        headers = ["Project Name", "Local Server IP", "Local Server Username", "BCP Server IP", "BCP Server Username", "Alias"]
+        tableHeaders = ["projectName", "localServerIP", "localUsername", "BCPServerIP", "BCPUsername", "alias"]
+        print(f'''INFO: Update the current {headers[i]} ("{data}") [Enter to Skip]\t''', end="")
+        newValue = input()
+        if newValue.strip():
+            updateDetails(tableHeaders[i], newValue, serverRow[0])
+       
+def updateRule():
+    rulesIDList = []
+    def updateDetails(columnName, newValue, ruleID):
+        SQL_QUERY = f'''update bcpSyncRules set {columnName}="{newValue}" where ruleID={ruleID}'''
+        try:
+            database = connectToDatabase()
+            dbcursor = database.cursor()
+            dbcursor.execute(SQL_QUERY)
+            database.commit()
+        except Exception as e:
+            print("Error: Failed to update the Database\t" + str(e))
+    
+    print("Enter the Server ID you want to update.")
+    rulesList = listRules()
+    
+    for row in rulesList:
+        rulesIDList.append(row[0])
+           
+    while True:
+        ruleID = input("Rule ID to Update:\t")
+        if inputValidation(ruleID, "Rule ID", "UpdateSID", rulesIDList):
+            break
+    
+    for ruleRow in rulesList:
+        if ruleRow[0] == int(ruleID):
+            ruleDetails = list(ruleRow)
+    
+    for i, data in enumerate(ruleDetails[1:]):
+        headers = ["Project Name", "Local Server Path", "BCP Server Path", "serversID", "Extensions", "Alias", "Scheduled Time"]
+        tableHeaders = ["projectName", "localServerPath", "bcpServerPath", "serversID", "extensions", "alias", "scheduledTime"]
+        print(f'''INFO: Update the current {headers[i]} ("{data}") [Enter to Skip]\t''', end="")
+        newValue = input()
+        if newValue.strip():
+            updateDetails(tableHeaders[i], newValue, ruleRow[0])
+                        
+def inputValidation(STRING_TO_CHECK, FIELD_NAME, inputType, comparisonList = []):
     if not STRING_TO_CHECK.strip():
         print(f"Error: {FIELD_NAME} is required.")
         return False
@@ -406,16 +491,27 @@ def inputValidation(STRING_TO_CHECK, FIELD_NAME, inputType):
             else:
                 print(f"Error: ID should be an Interger")
                 return False
+            
         if inputType == "Time":
             if isValidTime(STRING_TO_CHECK.strip()):
                 return True
             else:
                 print(f"Error: {FIELD_NAME} is in incorrect format. Corrent Format - 23:45")
                 return False
-            
+        
+        if inputType == "UpdateSID":
+            if STRING_TO_CHECK.isdigit():
+                if int(STRING_TO_CHECK) not in comparisonList:
+                    print(f"Error: Server ID cannot be found. Try Again.")
+                    return False
+                return True
+            else:
+                print(f"Error: ID should be an Interger")
+                return False
+        
         if inputType == "None":
             return True
+    
 
 if __name__ == "__main__":
     main(sys.argv)
-

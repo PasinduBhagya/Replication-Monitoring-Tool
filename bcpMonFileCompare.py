@@ -42,7 +42,7 @@ def checkExtFileAvailability(extensions, username, serverIP, serverPath):
         
         except subprocess.CalledProcessError as e:
             if e.returncode == 2:
-                print(f"Warnin{exeTime}g: No files found with {extension} extension, on {serverIP} in {serverPath} path.")
+                print(f"Warning{exeTime}: No files found with {extension} extension, on {serverIP} in {serverPath} path.")
             else:
                 print(f"Error:{exeTime} Failed to execute the listing Command on {serverIP} server.")
 
@@ -80,9 +80,7 @@ def getLocalServerMD5Sum(localServerPath, extensions, localServerIP, localUserna
                     LOCAL_MD5SUM_HASH[key] = value
 
             except:
-                print(f"Warning {exeTime}: Invalid output recived from the server: " + resultLine)
-
-            
+                print(f"Warning {exeTime}: Invalid output recived from the server: " + resultLine)         
         
         return LOCAL_MD5SUM_HASH
         
@@ -135,9 +133,7 @@ def getBCPServerMD5Sum(bcpServerPath, extensions, BCPServerIP, BCPUsername, proj
             print(f"Error:{exeTime} Connection to {BCPServerIP} timed out. Please check your network connection and try again.")
 
 def getRuleID():
-    
-    SYNC_STATUS = "Success"
-    
+   
     checkedRulesList = []
 
     if not os.path.isfile(f"./.cache/{DATE_FOLDER}_checkedRules"):
@@ -160,6 +156,7 @@ def getRuleID():
     rulesInfo = fetchFromDatabase(sql_query)
     
     for ruleInfo in rulesInfo:
+        SYNC_STATUS = "Success"
         print("-"*90)
         print(f"INFO: {exeTime} Starting rule ID - " + str(ruleInfo[0]) + " " + str(ruleInfo[-1]))
         

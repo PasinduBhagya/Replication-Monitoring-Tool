@@ -33,3 +33,7 @@ def isValidTime(STRING_TO_CHECK):
         return True
     else:
         return False
+    
+def isValidServerID(STRING_TO_CHECK):
+    # Check if it is in the Current Server ID list
+    pass

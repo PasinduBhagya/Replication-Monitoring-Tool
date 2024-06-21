@@ -32,7 +32,6 @@ def fetchFromDatabase(sql_query):
 def removeTodayData(FOLDER_NAME):
     database = connectToDatabase()
     dbcursor = database.cursor()
-     # Remove exiting Data for the date
     sql_query = f'''delete from statusProgress where dateTime = "{FOLDER_NAME} 00:00:00"'''
     dbcursor.execute(sql_query)
     database.commit()
@@ -110,7 +109,6 @@ def main():
     
     if os.path.exists("DATA/" + FOLDER_NAME): 
         
-        # Project Names
         SYC_RESULTS_FILES = os.listdir("DATA/" + FOLDER_NAME) # Get the Date with the Folder name
         
         print(f"INFO: {exeTime} Listing Project Names " + str(SYC_RESULTS_FILES))
