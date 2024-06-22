@@ -42,7 +42,7 @@ def main(arguments):
         --run-rules\t: To manualy run the rules
         --show-logs\t: To be code     
     
-    If you need any other support, please contact Pasindu Bhagya - pasindub@codegen.net
+    If you need any other support, please contact Pasindu Bhagya - bhagyapeiries@gmail.com
     ''')
         exit()
 
