@@ -10,8 +10,6 @@ from configparser import ConfigParser
 from bcpMonValidations import isValidDir, isValidIP, isID, isValidProject, isValidTime, isValidServerID
 
 config = ConfigParser()
-# baseDIR = os.path.dirname(os.path.realpath(os.path.dirname(__file__) + "/bcpsyn"))
-# config.read(baseDIR + "/.env")
 config.read("./.env")
 
 def main(arguments):
