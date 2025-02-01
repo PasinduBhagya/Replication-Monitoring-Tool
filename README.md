@@ -41,7 +41,7 @@ Sample Dashboard when you select a Project from the Dropdown.
 
 ## Monitoring configurations with CLI
 
-To access the command-line interface (CLI) of the tool, utilize the command "bcpsyn" along with the necessary flags. To view a comprehensive list of available commands, execute the following: `bcpsyn --help`. This command will provide a detailed overview of all available flags and their respective functionalities within the tool.
+To access the command-line interface (CLI) of the tool, utilize the command "repmon" along with the necessary flags. To view a comprehensive list of available commands, execute the following: `repmon --help`. This command will provide a detailed overview of all available flags and their respective functionalities within the tool.
 
 ![Screenshot 2024-05-01 134029](https://github.com/PasinduBhagya/BCP-Grafana/assets/63937160/e02f79c3-3454-4d3b-8d8f-bc65cd789d82)
 
@@ -64,7 +64,7 @@ To access the command-line interface (CLI) of the tool, utilize the command "bcp
 > `--run-rules` - Manually runs the rules.
 
 ### 1. Add a New Server Pair.
-To add a new server pair, please enter the following command: `bcpsyn --add-new-servers` and press enter. Subsequently, the tool will prompt you to input the necessary information for the new server pair.
+To add a new server pair, please enter the following command: `repmon --add-new-servers` and press enter. Subsequently, the tool will prompt you to input the necessary information for the new server pair.
 
 Upon entering the server username and password, you'll be prompted for the password of the user associated with the specified IP Address. After providing the password, the tool will copy its public key to the authorized keys file of that user. This action enables key-based authentication for future connections to the server.
 
@@ -75,30 +75,30 @@ Upon entering the server username and password, you'll be prompted for the passw
 > [!TIP]
 > It's advisable to verify whether key-based authentication is enabled by using the command "ssh `username`@`IP Address`"
 
-To confirm the addition of the server pair, you can use the command `bcpsyn --list-servers`. This command will display a list of all available servers.
+To confirm the addition of the server pair, you can use the command `repmon --list-servers`. This command will display a list of all available servers.
 
 ### 2. To Remove a Server Pair.
-To remove a server, input the command bcpsyn `--remove-server` and press enter. You will then be prompted to provide the serversID of the server you wish to remove.
+To remove a server, input the command repmon `--remove-server` and press enter. You will then be prompted to provide the serversID of the server you wish to remove.
 
 > [!WARNING]
 > Removing a server pair will result in the removal of all associated rules.
 
 ### 3. Add a New Rule.
-To add a new rule, enter the command bcpsyn `--add-rule` and press enter. Subsequently, the tool will prompt you to provide the necessary information.
+To add a new rule, enter the command `repmon --add-rule` and press enter. Subsequently, the tool will prompt you to provide the necessary information.
 
 > [!TIP]
 > The extension prompt is optional. You can specify particular extensions (e.g., zip, txt) if needed. To check all files, simply leave the prompt empty.
 
 ### 4. List all Rules
 
-To display all rules, execute the command `bcpsyn --list-rules` and press enter.
+To display all rules, execute the command `repmon --list-rules` and press enter.
 
 ### 5. Remove a rule.
 
-To remove a rule, use the command `bcpsyn --remove-rule`. Provide the Rule ID of the rule you wish to remove and press enter. This action will delete the specified rule.
+To remove a rule, use the command `repmon --remove-rule`. Provide the Rule ID of the rule you wish to remove and press enter. This action will delete the specified rule.
 
 ## How the tool works?
-The tools use rules to check the synchronization status of the to folder reside on two diffrent servers. You can list down all the rules by using `bcpsyn --list-rules` command.
+The tools use rules to check the synchronization status of the to folder reside on two diffrent servers. You can list down all the rules by using `repmon --list-rules` command.
 
 Column Name  | Description
 ------------- | -------------
@@ -106,10 +106,10 @@ ID  | Rule ID which will be created automaticaly.
 Project Name  | Name of the Project.
 Local Server Path  | Absoulte path to the directory on the local server. 
 BCP Server Path  | Absoulte path to the directory on the BCP server. 
-serversID | The ID of the Servers pair which will be added using `bcpsyn --add-new-server`.
+serversID | The ID of the Servers pair which will be added using `repmon --add-new-server`.
 Alias  | The name that will be visible on the Grafana Dashboard.
 
-Each rule includes a ServerID containing data from both the Local and BCP servers. You can view server information by using the command bcpsyn `--list-servers`.
+Each rule includes a ServerID containing data from both the Local and BCP servers. You can view server information by using the command repmon `--list-servers`.
 
 
 Column Name  | Description
