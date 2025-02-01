@@ -1,4 +1,4 @@
-# Sync Monitoring Tool
+# Replication Monitoring Tool
 
 The main purose of this tool is for monitor the synchronization status of two directories, which are on local server and remote server.
 
